@@ -1,5 +1,7 @@
 # personal
-npm install -g npm to update!
+--update npm--
+npm install -g npm
+
 
 --bootstrap installation
 
