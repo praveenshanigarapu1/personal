@@ -14,3 +14,6 @@ https://codepen.io/maggiben/pen/rCIFu
 --bootstrap angular breadscrum model
 
 https://brianflove.com/2016/10/23/angular2-breadcrumb-using-router/
+
+npm install -g @angular/cli
+
