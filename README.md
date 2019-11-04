@@ -17,3 +17,17 @@ https://brianflove.com/2016/10/23/angular2-breadcrumb-using-router/
 
 npm install -g @angular/cli
 
+
+
+cookies and IP addresses allow us to deliver and improve our web content, resolve technical errors, and provide you with a personalized experience. Our website uses cookies and collects your IP address for these purposes.
+
+JetBrains may use cookies and my IP address to
+collect individual statistics and to provide me with
+personalized offers and ads subject to the Privacy
+Policy and the Terms of Use. JetBrains may use
+third-party services for this purpose. I can revoke
+my consent at any time by visiting the Opt-Out page.
+
+
+https://www.jetbrains.com/webstorm/
+
