@@ -57,3 +57,8 @@ ng generate module app-routing --flat --module=app
 
 npm install angular-in-memory-web-api --save
 
+
+Directive project
+------------------
+https://stackblitz.com/angular/nqqljmvyvpr
+
