@@ -31,3 +31,24 @@ my consent at any time by visiting the Opt-Out page.
 
 https://www.jetbrains.com/webstorm/
 
+Project download install steps
+-------------------------------
+
+https://stackoverflow.com/questions/50333003/could-not-find-module-angular-devkit-build-angular
+
+npm install --save-dev @angular-devkit/build-angular
+
+npm install
+
+ng update
+
+and finally
+
+npm update
+
+rm -r node_modules (or delete your node_modules folder manually)
+npm cache clean (npm > v5 add --force so: npm cache clean --force)
+npm install
+
+
+
