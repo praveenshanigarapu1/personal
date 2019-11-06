@@ -76,3 +76,13 @@ MDB Side bar
 
 https://mdbootstrap.com/docs/angular/navigation/sidenav/
 
+https://stackoverflow.com/questions/40291225/angular2-material-md-icon-is-not-a-known-element
+
+npm install --save @angular/material @angular/animations @angular/cdk
+
+https://www.npmjs.com/package/ng-sidebar
+
+
+npm install --save @angular/material
+
+
