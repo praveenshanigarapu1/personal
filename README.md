@@ -98,6 +98,9 @@ Git user configurations
   chrome://settings/passwords
   
   https://mdbootstrap.com/docs/angular/
+  
+  https://mdbootstrap.com/education/bootstrap/admin-dashboard-lesson-9/
+  https://mdbootstrap.com/snippets/jquery/temp/1407404?action=prism_export
 
 
 
