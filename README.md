@@ -90,6 +90,12 @@ Git user configurations
 
   git config --global user.email "praveen.shanigarapu@gmail.com"
   git config --global user.name "praveen"
+  
+  
+  Chrome passwords
+  -----------------
+  
+  chrome://settings/passwords
 
 
 
