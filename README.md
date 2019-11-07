@@ -85,4 +85,11 @@ https://www.npmjs.com/package/ng-sidebar
 
 npm install --save @angular/material
 
+Git user configurations
+------------------------
+
+  git config --global user.email "praveen.shanigarapu@gmail.com"
+  git config --global user.name "praveen"
+
+
 
