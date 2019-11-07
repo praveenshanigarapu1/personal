@@ -101,6 +101,7 @@ Git user configurations
   
   https://mdbootstrap.com/education/bootstrap/admin-dashboard-lesson-9/
   https://mdbootstrap.com/snippets/jquery/temp/1407404?action=prism_export
+  https://github.com/mdbootstrap/bootstrap-material-design-pro
 
 
 
