@@ -56,7 +56,7 @@ ng generate module app-routing --flat --module=app
 --module=app tells the CLI to register it in the imports array of the AppModule.
 
 npm install angular-in-memory-web-api --save
-
+npm install jquery — save
 
 Directive project
 ------------------
