@@ -104,4 +104,11 @@ Git user configurations
   https://github.com/mdbootstrap/bootstrap-material-design-pro
 
 
+sidebar video
+--------------
+
+https://www.youtube.com/watch?v=82ub3brCJRU&list=PLkkxEjvWUz6DOBbHo9EOtSjELe99WPpOd&index=29
+
+https://www.youtube.com/watch?v=cwDqjmSmtMQ
+
 
