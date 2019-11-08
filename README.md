@@ -111,4 +111,8 @@ https://www.youtube.com/watch?v=82ub3brCJRU&list=PLkkxEjvWUz6DOBbHo9EOtSjELe99WP
 
 https://www.youtube.com/watch?v=cwDqjmSmtMQ
 
+collapse 
+--------
+https://stackoverflow.com/questions/12603425/expand-and-collapse-with-angular-js
+
 
