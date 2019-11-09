@@ -115,4 +115,6 @@ collapse
 --------
 https://stackoverflow.com/questions/12603425/expand-and-collapse-with-angular-js
 
+https://stackoverflow.com/questions/48226868/document-getelementbyid-replacement-in-angular4-typescript/48226924
+
 
