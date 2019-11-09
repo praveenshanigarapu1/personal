@@ -117,4 +117,12 @@ https://stackoverflow.com/questions/12603425/expand-and-collapse-with-angular-js
 
 https://stackoverflow.com/questions/48226868/document-getelementbyid-replacement-in-angular4-typescript/48226924
 
+Boot strap installation in angular
+----------------------------------
+https://www.youtube.com/watch?v=8Onby_SVIHc
+https://valor-software.com/ngx-bootstrap/#/
+https://github.com/valor-software/ngx-bootstrap/blob/development/docs/getting-started/ng-cli.md
+
+https://www.javaguides.net/2019/06/angular-8-crud-example-tutorial.html
+
 
