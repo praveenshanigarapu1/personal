@@ -125,4 +125,10 @@ https://github.com/valor-software/ngx-bootstrap/blob/development/docs/getting-st
 
 https://www.javaguides.net/2019/06/angular-8-crud-example-tutorial.html
 
+ngx toggle
+----------
+https://www.npmjs.com/package/ngx-toggle
+
+ng generate class components/customers/customer --type=model
+
 
