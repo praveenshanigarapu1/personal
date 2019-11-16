@@ -131,4 +131,22 @@ https://www.npmjs.com/package/ngx-toggle
 
 ng generate class components/customers/customer --type=model
 
+Git
+---
+1.
+rd .git /S/Q
+git init
+git add .
+git commit -m "first commit"
+git push --force origin master
+
+git remote add origin https://github.com/praveenshanigarapu1/projects.git
+git push -u origin master
+
+
+clone
+git clone
+
+https://github.com/praveenshanigarapu1/projects
+
 
