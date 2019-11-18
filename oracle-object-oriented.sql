@@ -35,3 +35,14 @@ SQL> DECLARE
     /
 19 J R Rd
 Vancouver, NJ 00000
+                              
+32.1.2 Object instances and initialization
+SQL> DECLARE
+     off_add address :=address('19 J','Reading Rd','Vancouver','NJ','00000');
+   BEGIN
+     DBMS_OUTPUT.PUT_LINE(off_add.line1||' '||off_add.line2);
+     DBMS_OUTPUT.PUT_LINE(off_add.city||', '||off_add.state_code||' '||off_add.zip);
+   END;
+   /
+19 J Reading Rd
+Vancouver, NJ 00000                              
