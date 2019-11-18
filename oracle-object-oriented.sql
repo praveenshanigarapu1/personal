@@ -46,3 +46,22 @@ SQL> DECLARE
    /
 19 J Reading Rd
 Vancouver, NJ 00000                              
+32.1.3 Nested object
+SQL> CREATE Or Replace TYPE AddressType AS OBJECT (
+      street VARCHAR2(15),
+      city   VARCHAR2(15),
+      state  CHAR(2),
+      zip    VARCHAR2(5)
+    );
+    /
+SQL>
+SQL>
+SQL> CREATE Or Replace TYPE PersonType AS OBJECT (
+      id         NUMBER,
+      first_name VARCHAR2(10),
+      last_name  VARCHAR2(10),
+      dob        DATE,
+      phone      VARCHAR2(12),
+      address    AddressType
+    );
+    /                              
