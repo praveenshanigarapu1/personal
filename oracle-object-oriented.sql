@@ -91,9 +91,34 @@ CREATE Or Replace TYPE ProductType AS OBJECT (
 );
 /                            
                               
+32.1.6 The body defines the code for the method, and a body is created using the CREATE TYPE BODY statement                              
                               
-                              
-                              
+SQL> CREATE Or Replace TYPE EmployeeType AS OBJECT (
+      id          NUMBER,
+      name        VARCHAR2(15),
+      description VARCHAR2(22),
+      salary       NUMBER(5, 2),
+  
+      MEMBER FUNCTION getByDate RETURN DATE
+    );
+    /
+
+Type created.
+
+SQL> CREATE Or Replace TYPE BODY EmployeeType AS
+    MEMBER FUNCTION getByDate RETURN DATE IS
+       v_by_date DATE;
+     BEGIN
+      SELECT SYSDATE
+       INTO v_by_date
+       FROM dual;
+ 
+      RETURN v_by_date;
+     END;
+   END;
+   /
+
+Type body created.                              
                               
                               
                               
