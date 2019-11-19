@@ -75,9 +75,21 @@ SQL> CREATE Or Replace TYPE ProductType AS OBJECT (
  
      MEMBER FUNCTION getByDate RETURN DATE
    );
-                               
-                              
-                              
+ 32.1.5 The MEMBER FUNCTION clause declares the getByDate()                             
+You can declare a procedure using MEMBER PROCEDURE.
+
+A procedure is similar to a function except that a procedure doesn't typically return a value                              
+ 
+CREATE Or Replace TYPE ProductType AS OBJECT (
+  id          NUMBER,
+  name        VARCHAR2(15),
+  description VARCHAR2(22),
+  price       NUMBER(5, 2),
+  days_valid  NUMBER,
+
+  MEMBER FUNCTION getByDate RETURN DATE
+);
+/                            
                               
                               
                               
