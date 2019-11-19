@@ -65,3 +65,33 @@ SQL> CREATE Or Replace TYPE PersonType AS OBJECT (
       address    AddressType
     );
     /                              
+32.1.4 Declare a function.
+SQL> CREATE Or Replace TYPE ProductType AS OBJECT (
+     id          NUMBER,
+     name        VARCHAR2(15),
+     description VARCHAR2(22),
+     price       NUMBER(5, 2),
+     days_valid  NUMBER,
+ 
+     MEMBER FUNCTION getByDate RETURN DATE
+   );
+                               
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
