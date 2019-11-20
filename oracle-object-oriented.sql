@@ -118,9 +118,18 @@ SQL> CREATE Or Replace TYPE BODY EmployeeType AS
    END;
    /
 
-Type body created.                              
+Type body created.     
                               
+32.1.7  Create a synonym and a public synonym for a type
+You must have the CREATE PUBLIC SYNONYM privilege to run this statement.
                               
+SQL> CREATE or replace PUBLIC SYNONYM pub_EmployeeType FOR EmployeeType;
+
+Synonym created.
+
+SQL> /
+
+Synonym created.                              
                               
                               
                               
