@@ -145,9 +145,68 @@ METHOD
 ------
  MEMBER FUNCTION GETBYDATE RETURNS DATE                              
                               
- 32.1.9                             
+ 32.1.9  Object types with member functions                            
                               
-                              
+ SQL> create or replace type employeeType is object (
+       empNo    NUMBER,
+       eName    VARCHAR2(10),
+       job      VARCHAR2(9),
+       hireDate DATE,
+       sal      NUMBER,
+       comm     NUMBER,
+       member   procedure p_changeName (i_newName_tx VARCHAR2),
+       member   function  f_getIncome_nr  return VARCHAR2
+   )
+   /
+
+SP2-0816: Type created with compilation warnings
+
+SQL>
+SQL> create or replace type body employeeType as
+      member function f_getIncome_nr return VARCHAR2 is
+      begin
+          return sal+comm;
+      end f_getIncome_nr;
+
+      member procedure p_changeName (i_newName_tx VARCHAR2) is
+      begin
+          eName:=i_newName_tx;
+      end p_changeName;
+  end;
+  /
+
+SP2-0818: Type Body created with compilation warnings
+
+SQL>
+SQL> desc employeeType
+ Name                           Null?    Type
+ ---------------------------------
+ EMPNO                                   NUMBER
+ ENAME                                   VARCHAR2(10)
+ JOB                                     VARCHAR2(9)
+ HIREDATE                                DATE
+ SAL                                     NUMBER
+ COMM                                    NUMBER
+
+METHOD
+------
+ MEMBER PROCEDURE P_CHANGENAME
+ Argument Name                  Type                    In/Out Default?
+ ------------------------------ ----------------------- ------ --------
+ I_NEWNAME_TX                   VARCHAR2                IN
+
+METHOD
+------
+ MEMBER FUNCTION F_GETINCOME_NR RETURNS VARCHAR2
+
+SQL> /
+
+SP2-0818: Type Body created with compilation warnings
+
+SQL>
+SQL> drop type employeeType;
+
+Type dropped.                             
                               
                               
                               
