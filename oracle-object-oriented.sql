@@ -131,11 +131,21 @@ SQL> /
 
 Synonym created.                              
                               
+32.1.8 Using DESCRIBE to Get Information on Object Types                              
                               
+SQL> desc EmployeeType;
+ Name            Null?    Type
+ 
+ ID                       NUMBER
+ NAME                     VARCHAR2(15)
+ DESCRIPTION              VARCHAR2(22)
+ SALARY                   NUMBER(5,2)
+
+METHOD
+------
+ MEMBER FUNCTION GETBYDATE RETURNS DATE                              
                               
-                              
-                              
-                              
+ 32.1.9                             
                               
                               
                               
