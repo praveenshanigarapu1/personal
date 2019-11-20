@@ -207,6 +207,25 @@ SQL>
 SQL> drop type employeeType;
 
 Type dropped.                             
+32.1.10                               
                               
-                              
-                              
+SQL> create or replace type employeeType is object (
+  2      empNo    NUMBER,
+  3      eName    VARCHAR2(10)
+  4  )
+  5  /
+
+Type created.
+
+SQL>
+SQL> desc employeeType;
+ Name                  Null?    Type
+ --------------------------------
+ EMPNO                          NUMBER
+ ENAME                          VARCHAR2(10)
+
+SQL>
+SQL>
+SQL> alter type employeeType
+  2    add attribute birthdate_dt DATE; -- add attribute
+  3  /                              
