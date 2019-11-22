@@ -23,9 +23,15 @@ SQL> SELECT deptno, ename, sal
      FROM   emp e1
      WHERE  sal = (SELECT MAX(sal) FROM emp
                       WHERE  deptno = e1.deptno)
+                      
+2.37.4.	The subquery returning the literal value 1
 
-
-
+SQL> SELECT empno, ename
+  2  FROM employee outer
+  3  WHERE EXISTS
+  4    (SELECT 1
+  5     FROM employee inner
+  6     WHERE inner.manager_id = outer.empno);
 
 
 
