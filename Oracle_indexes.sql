@@ -375,8 +375,20 @@ Statistics
 SQL>
 SQL> set autotrace off;		       
 		       
-		       
-		       
+9.1.15.	create unique index with case ... when statement		       
+SQL> create unique index oau_reg on registrations
+  2  ( case course when 'OAU' then attendee else null end
+  3  , case course when 'OAU' then course   else null end );
+
+Index created.
+
+SQL>
+SQL> insert into registrations values (12,'OAU',sysdate,null);
+
+1 row created.
+
+SQL>
+SQL> drop index oau_reg;		       
 		       
 		       
 		       
