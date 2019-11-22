@@ -203,8 +203,26 @@ create table dept_t
  select * from dept_t
  select * from emp_t
 ------------------------------------------
+9.1.7.	Creates an index on the new added column
+SQL> -- Adds the new column
+SQL> ALTER TABLE employee ADD employee_dup_id VARCHAR2(7);
 
+Table altered.
 
+SQL>
+SQL> -- Updates the new column with the value of the employee_id column
+SQL> UPDATE employee
+  2  SET    employee_dup_id = employee_id;
+
+10 rows updated.
+
+SQL>
+SQL>
+SQL> -- Creates an index on the new column
+SQL> CREATE UNIQUE INDEX employee_test_idx2
+  2     ON employee(employee_dup_id);
+
+Index created.
 
 
 
