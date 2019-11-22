@@ -310,4 +310,39 @@ SQL> CREATE TABLE emp2
  12   );
 
 Table created.
+9.1.12
+SQL> create unique index pk_idx on emp (emp_id);
 
+SQL>
+SQL> select index_name, table_name, column_name from user_ind_columns where table_name = 'EMP';
+
+
+SQL>
+SQL> select constraint_name, table_name, column_name from user_cons_columns where table_name = 'EMP'
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
+		       
