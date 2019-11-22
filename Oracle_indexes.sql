@@ -290,8 +290,10 @@ SQL> set autotrace off
     
     SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 
+	9.1.10.	Create index for upper case last name
+   SQL> create index upper_emp_idx on emp upper(lastname);
 
-
+Index created.
 
 
 
