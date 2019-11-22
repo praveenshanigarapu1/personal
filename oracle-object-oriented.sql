@@ -229,3 +229,56 @@ SQL>
 SQL> alter type employeeType
       add attribute birthdate_dt DATE; -- add attribute
     /                              
+32.1.11 Drop attribute
+
+                              SQL> create or replace type employeeType is object (
+        empNo    NUMBER,
+        deptNo   NUMBER
+    )
+    /
+
+Type created.
+
+SQL> desc employeeType
+ Name           Null?    Type
+ -----------------------------
+ EMPNO                   NUMBER
+ DEPTNO                  NUMBER
+
+SQL> /
+
+Type created.
+
+SQL>
+SQL> alter type employeeType
+      drop attribute empno
+    /
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+                              
