@@ -37,7 +37,15 @@ Index created.
 SQL> drop index employee_last_name_idx;
 
 Index dropped.
+9.1.2.	Enforce uniqueness of values in a column using a unique index                     
+SQL> CREATE UNIQUE INDEX employee_id_idx ON employee(id);
 
+Index created.
+
+SQL>
+SQL> drop index employee_id_idx;
+
+Index dropped.
 
 
 
