@@ -223,8 +223,18 @@ SQL> CREATE UNIQUE INDEX employee_test_idx2
   2     ON employee(employee_dup_id);
 
 Index created.
+9.1.8.	Create a fully indexed table named myCode
+SQL> create table myCode(
+  2    codeValue  VARCHAR2(1) primary key,
+  3    Description VARCHAR2(25)
+  4  );
 
+Table created.
 
+SQL>
+SQL> create index i1 on myCode (codeValue, Description);
+
+Index created.
 
 
 
