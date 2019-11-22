@@ -27,15 +27,20 @@ SQL> SELECT deptno, ename, sal
 2.37.4.	The subquery returning the literal value 1
 
 SQL> SELECT empno, ename
-  2  FROM employee outer
-  3  WHERE EXISTS
-  4    (SELECT 1
-  5     FROM employee inner
-  6     WHERE inner.manager_id = outer.empno);
+    FROM employee outer
+    WHERE EXISTS
+      (SELECT 1
+       FROM employee inner
+       WHERE inner.manager_id = outer.empno);
 
+	2.37.5.	Using NOT EXISTS with a Correlated Subquery
 
-
-
+SQL> SELECT empno, ename
+   FROM employee outer
+   WHERE NOT EXISTS
+     (SELECT 1
+      FROM employee inner
+      WHERE inner.empno = outer.manager_id);
 
 
 
