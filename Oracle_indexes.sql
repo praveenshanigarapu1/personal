@@ -394,7 +394,19 @@ SQL> drop index oau_reg;
 CREATE INDEX NameIndex ON myTable (Name);		       
 		       
 9.1.18.	Create index with tablespace		       
-		       
+SQL> create table emp (
+        EmpNo          NUMBER(10) primary key,
+        Name           VARCHAR2(40),
+        DeptNo         NUMBER(2),
+        Salary         NUMBER(7,2),
+        Birth_Date     DATE,
+        Soc_Sec_Num    VARCHAR2(9),
+        State_Code     CHAR(2)
+    );
+SQL>
+SQL> create index CITY_ST_ZIP_NDX
+    on emp(EmpNo, DeptNo, Soc_Sec_Num)
+    tablespace INDEXES;		       
 		       
 		       
 		       
