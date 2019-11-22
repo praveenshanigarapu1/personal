@@ -253,8 +253,50 @@ SQL>
 SQL> alter type employeeType
       drop attribute empno
     /
-                              
-                              
+32.1.12  Object elements are referenced by using variable.attribute and variable.method notation                              
+
+                              SQL> create or replace type employeeType is object (
+       empNo    NUMBER,
+       eName    VARCHAR2(10),
+       job      VARCHAR2(9),
+       hireDate DATE,
+       sal      NUMBER,
+       comm     NUMBER,
+       member   procedure p_changeName (i_newName_tx VARCHAR2),
+       member   function  f_getIncome_nr  return VARCHAR2
+   )
+   /
+
+SP2-0816: Type created with compilation warnings
+
+SQL>
+SQL> create or replace type body employeeType as
+       member function f_getIncome_nr return VARCHAR2 is
+       begin
+           return sal+comm;
+       end f_getIncome_nr;
+ 
+       member procedure p_changeName (i_newName_tx VARCHAR2) is
+       begin
+           eName:=i_newName_tx;
+       end p_changeName;
+   end;
+   /
+
+SP2-0818: Type Body created with compilation warnings
+
+SQL>
+SQL>
+SQL> declare
+        v_employeeType employeeType;
+    begin
+        v_employeeType:=employeeType(100,'TestEmp', 'JobTitle', sysdate,1000, 500);
+        v_employeeType.sal:=v_employeeType.sal+500;
+  
+        DBMS_OUTPUT.put_line('Employee:'||v_employeeType.eName||' has income '||v_employeeType.f_getIncome_nr());
+    end;
+    /
+Employee:TestEmp has income 2000
                               
                               
                               
