@@ -294,6 +294,20 @@ SQL> set autotrace off
    SQL> create index upper_emp_idx on emp upper(lastname);
 
 Index created.
+		       
+9.1.11.	Create index along with the column definition
+SQL> CREATE TABLE emp2
+  2  (emp_id        NUMBER PRIMARY KEY
+  3                  USING INDEX
+  4                  (CREATE INDEX pk_idx ON emp2(emp_id) TABLESPACE users)
+  5   ,lastname      VARCHAR2(20) CONSTRAINT lastname_create_nn NOT NULL
+  6   ,firstname     VARCHAR2(15) CONSTRAINT firstname_create_nn NOT NULL
+  7   ,phone     VARCHAR2(12)
+  8   ,company_name  VARCHAR2(50)
+  9   ,CONSTRAINT unique_emp_phone UNIQUE (phone)
+ 10    USING INDEX
+ 11   (CREATE INDEX phone_idx ON emp2 (phone) TABLESPACE users)
+ 12   );
 
-
+Table created.
 
