@@ -50,9 +50,14 @@ SQL> select ename, init, bdate
                   where  ename = 'JONES');
 
 
+2.37.7.	List all employees who attended XML course and Java course
 
-
-
+SQL> select attendee
+   from   registrations
+   where  course   = 'JAV'
+   and    attendee in (select attendee
+                       from   registrations
+                       where  course = 'XML');
 
 
 
