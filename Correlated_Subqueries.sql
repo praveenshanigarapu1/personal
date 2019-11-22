@@ -59,8 +59,10 @@ SQL> select attendee
                        from   registrations
                        where  course = 'XML');
 
-
-
+2.37.8.	Extract a Subset of the Results
+SQL> SELECT username,score FROM
+    (SELECT username,score FROM myTable ORDER BY score DESC) t
+      WHERE rownum <= 10;
 
 
 
