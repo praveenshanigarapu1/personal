@@ -42,8 +42,12 @@ SQL> SELECT empno, ename
       FROM employee inner
       WHERE inner.empno = outer.manager_id);
 
-
-
+2.37.6.	list all employees who is younger than Joe
+SQL> select ename, init, bdate
+  from   employees
+  where  bdate > (select bdate
+                  from   employees
+                  where  ename = 'JONES');
 
 
 
