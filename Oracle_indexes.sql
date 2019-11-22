@@ -80,8 +80,23 @@ SQL> drop index employee_first_last_name_idx;
 
 Index dropped.
 
+9.1.5.	Creating a Function-Based Index                       
+                       
+You must set the initialization parameter QUERY_REWRITE_ENABLED to true in order to take advantage of function-based indexes.
+SQL> ALTER SYSTEM SET QUERY_REWRITE_ENABLED=TRUE;
+SQL> CREATE INDEX employee_last_name_func_idx
+  2  ON employee(UPPER(last_name));
 
+Index created.
 
+SQL> SELECT first_name, last_name
+  2  FROM employee
+  3  WHERE last_name = UPPER('PRICE');
+
+no rows selected
+
+SQL>
+SQL>drop index employee_last_name_func_idx;
 
 
 
