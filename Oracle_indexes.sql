@@ -388,8 +388,12 @@ SQL> insert into registrations values (12,'OAU',sysdate,null);
 1 row created.
 
 SQL>
-SQL> drop index oau_reg;		       
+SQL> drop index oau_reg;
 		       
+9.1.16.	Create Non-Unique index		       
+CREATE INDEX NameIndex ON myTable (Name);		       
+		       
+9.1.18.	Create index with tablespace		       
 		       
 		       
 		       
