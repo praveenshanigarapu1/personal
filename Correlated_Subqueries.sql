@@ -11,8 +11,13 @@ SQL> SELECT id, first_name, salary
       FROM employee inner
       WHERE inner.id = outer. id);
 
-
-
+2.37.2.	Using EXISTS and NOT EXISTS with a Correlated Subquery
+SQL> SELECT empno, ename
+  FROM employee outer
+  WHERE EXISTS
+    (SELECT empno
+     FROM employee inner
+     WHERE inner.manager_id = outer.empno);
 
 
 
