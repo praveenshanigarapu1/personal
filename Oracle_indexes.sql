@@ -47,6 +47,27 @@ SQL> drop index employee_id_idx;
 
 Index dropped.
 
+9.1.3.	Create combined-column index                       
+SQL> CREATE TABLE person (
+  2       person_code VARCHAR2(3) PRIMARY KEY,
+  3       first_name  VARCHAR2(15),
+  4       last_name   VARCHAR2(20),
+  5       hire_date   DATE
+  6       );
+
+Table created.
+
+SQL>
+SQL>
+SQL>
+SQL> CREATE INDEX person_name_index ON person(last_name, first_name);
+
+Index created.
+
+SQL>
+SQL> drop index person_name_index;
+
+Index dropped                       
 
 
 
