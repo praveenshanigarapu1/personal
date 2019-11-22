@@ -18,8 +18,11 @@ SQL> SELECT empno, ename
     (SELECT empno
      FROM employee inner
      WHERE inner.manager_id = outer.empno);
-
-
+2.37.3.	A correlated subquery: the subquery references a column from a table referred to in the parent statement.
+SQL> SELECT deptno, ename, sal
+     FROM   emp e1
+     WHERE  sal = (SELECT MAX(sal) FROM emp
+                      WHERE  deptno = e1.deptno)
 
 
 
