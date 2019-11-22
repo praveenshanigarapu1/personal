@@ -225,9 +225,9 @@ SQL> CREATE UNIQUE INDEX employee_test_idx2
 Index created.
 9.1.8.	Create a fully indexed table named myCode
 SQL> create table myCode(
-  2    codeValue  VARCHAR2(1) primary key,
-  3    Description VARCHAR2(25)
-  4  );
+    codeValue  VARCHAR2(1) primary key,
+    Description VARCHAR2(25)
+  );
 
 Table created.
 
@@ -284,6 +284,11 @@ Note
 
 SQL>
 SQL> set autotrace off
+                       
+    EXPLAIN PLAN FOR
+    SELECT * FROM Dual;
+    
+    SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 
 
 
