@@ -235,8 +235,55 @@ SQL>
 SQL> create index i1 on myCode (codeValue, Description);
 
 Index created.
+9.1.9.	indextype is ctxsys.context
+SQL>
+SQL> create table t ( x clob );
 
+Table created.
 
+SQL>
+SQL> set autotrace traceonly explain
+SQL> select * from t;
+
+Execution Plan
+----------------------------------------------------------
+Plan hash value: 1601196873
+
+----------------------------------
+| Id  | Operation         | Name |
+----------------------------------
+|   0 | SELECT STATEMENT  |      |
+|   1 |  TABLE ACCESS FULL| T    |
+----------------------------------
+
+Note
+-----
+   - rule based optimizer used (consider using cbo)
+
+SQL>
+SQL> create index t_idx on t(x) indextype is ctxsys.context;
+
+Index created.
+
+SQL> select * from t;
+
+Execution Plan
+----------------------------------------------------------
+Plan hash value: 1601196873
+
+----------------------------------------------------------
+| Id  | Operation         | Name | Rows  | Bytes | Cost  |
+----------------------------------------------------------
+|   0 | SELECT STATEMENT  |      |    82 |  8200 |     1 |
+|   1 |  TABLE ACCESS FULL| T    |    82 |  8200 |     1 |
+----------------------------------------------------------
+
+Note
+-----
+   - cpu costing is off (consider enabling it)
+
+SQL>
+SQL> set autotrace off
 
 
 
