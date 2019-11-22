@@ -310,7 +310,7 @@ SQL> CREATE TABLE emp2
  12   );
 
 Table created.
-9.1.12
+9.1.14.	Demonstrate a bitmap join index.
 SQL> create unique index pk_idx on emp (emp_id);
 
 SQL>
@@ -320,8 +320,60 @@ SQL> select index_name, table_name, column_name from user_ind_columns where tabl
 SQL>
 SQL> select constraint_name, table_name, column_name from user_cons_columns where table_name = 'EMP'
 		       
-		       
-		       
+9.1.		       
+SQL> select count(*) from emp, dept where emp.deptno = dept.deptno and dept.dname = 'SALES';
+
+  COUNT(*)
+----------
+         6
+
+1 row selected.
+
+
+Execution Plan
+----------------------------------------------------------
+Plan hash value: 2157540364
+
+-------------------------------------
+| Id  | Operation            | Name |
+-------------------------------------
+|   0 | SELECT STATEMENT     |      |
+|   1 |  SORT AGGREGATE      |      |
+|   2 |   MERGE JOIN         |      |
+|   3 |    SORT JOIN         |      |
+|*  4 |     TABLE ACCESS FULL| DEPT |
+|*  5 |    SORT JOIN         |      |
+|   6 |     TABLE ACCESS FULL| EMP  |
+-------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   4 - filter("DEPT"."DNAME"='SALES')
+   5 - access("EMP"."DEPTNO"="DEPT"."DEPTNO")
+       filter("EMP"."DEPTNO"="DEPT"."DEPTNO")
+
+Note
+-----
+   - rule based optimizer used (consider using cbo)
+
+
+Statistics
+----------------------------------------------------------
+          1  recursive calls
+          0  db block gets
+          6  consistent gets
+          0  physical reads
+          0  redo size
+        411  bytes sent via SQL*Net to client
+        380  bytes received via SQL*Net from client
+          2  SQL*Net roundtrips to/from client
+          2  sorts (memory)
+          0  sorts (disk)
+          1  rows processed
+
+SQL>
+SQL> set autotrace off;		       
 		       
 		       
 		       
