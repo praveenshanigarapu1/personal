@@ -98,11 +98,111 @@ no rows selected
 SQL>
 SQL>drop index employee_last_name_func_idx;
 
+9.1.6.	Create index based on cluster
+
+SQL> create cluster emp_dept_cluster ( deptno number(2) ) size 1024
+  2  /
 
 
+SQL> create index emp_dept_cluster_idx on cluster emp_dept_cluster
+  2  /
+
+Index created.
+
+SQL>
+SQL> create table dept
+    ( deptno number(2) primary key,
+      dname  varchar2(14),
+      loc    varchar2(13)
+    )
+    cluster emp_dept_cluster(deptno)
+    /
+
+Table created.
+
+SQL>
+SQL> create table emp
+ ( empno number primary key,
+   ename varchar2(10),
+   job   varchar2(9),
+   mgr   number,
+   hiredate date,
+   sal   number,
+   comm  number,
+   deptno number(2)
+ )
+ cluster emp_dept_cluster(deptno)
+ /
+
+Table created.
+
+SQL>
+SQL> begin
+      for x in ( select * from dept )
+      loop
+          insert into dept values ( x.deptno, x.dname, x.loc );
+          insert into emp select * from emp where deptno = x.deptno;
+      end loop;
+  end;
+  /
+
+PL/SQL procedure successfully completed.
+
+SQL>
+SQL> drop cluster emp_dept_cluster;
+drop cluster emp_dept_cluster
+*
+ERROR at line 1:
+ORA-00951: cluster not empty
 
 
+SQL> drop table emp;
 
+Table dropped.
+
+SQL> drop table dept;
+
+Table dropped.
+
+SQL> drop index emp_dept_cluster_idx;
+
+Index dropped.
+-------------------------------------------                       
+create cluster emp_dept_cluster ( deptno number(2) ) size 1024
+
+create index emp_dept_cluster_idx on cluster emp_dept_cluster
+drop table dept_t
+create table dept_t
+    ( deptno number(2) primary key,
+      dname  varchar2(14),
+      loc    varchar2(13)
+    )
+    cluster emp_dept_cluster(deptno)
+    
+     create table emp_T
+ ( empno number primary key,
+   ename varchar2(10),
+   job   varchar2(9),
+   mgr   number,
+   hiredate date,
+   sal   number,
+   comm  number,
+   deptno number(2)
+ )
+ cluster emp_dept_cluster(deptno)
+ 
+ 
+ begin
+      for x in ( select * from dept )
+      loop
+          insert into dept_t values ( x.deptno, x.dname, x.loc );
+          insert into emp_t select * from emp where deptno = x.deptno;
+      end loop;
+  end;
+ 
+ select * from dept_t
+ select * from emp_t
+------------------------------------------
 
 
 
