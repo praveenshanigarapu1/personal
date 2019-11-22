@@ -69,8 +69,16 @@ SQL> drop index person_name_index;
 
 Index dropped                       
 
+9.1.4.	Create a composite index on multiple columns
+SQL> CREATE INDEX employee_first_last_name_idx ON
+  2  employee (first_name, last_name);
 
+Index created.
 
+SQL>
+SQL> drop index employee_first_last_name_idx;
+
+Index dropped.
 
 
 
