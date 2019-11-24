@@ -180,8 +180,59 @@ ORA-06512: at "JAVA2S.EMP_BIU", line 3
 ORA-04088: error during execution of trigger 'JAVA2S.EMP_BIU'
 
 
+28.1.6.	Trigger for auditing
 
+SQL> CREATE TABLE EMP(
+      EMPNO NUMBER(4) NOT NULL,
+      ENAME VARCHAR2(10),
+      JOB VARCHAR2(9),
+      MGR NUMBER(4),
+      HIREDATE DATE,
+      SAL NUMBER(7, 2),
+      COMM NUMBER(7, 2),
+      DEPTNO NUMBER(2)
+  );
+SQL> CREATE TABLE DEPT(
+      DEPTNO NUMBER(2),
+      DNAME VARCHAR2(14),
+      LOC VARCHAR2(13)
+  );
+SQL> CREATE TABLE DEPT$AUDIT (
+      DEPTNO       NUMBER,
+      DNAME        VARCHAR2(14 byte),
+      LOC          VARCHAR2(13 byte),
+      CHANGE_TYPE  VARCHAR2(1 byte),
+      CHANGED_BY   VARCHAR2(30 byte),
+      CHANGED_TIME DATE
+  );
 
+SQL> CREATE OR REPLACE TRIGGER auditDEPTAR AFTER
+   INSERT OR UPDATE OR DELETE ON DEPT FOR EACH ROW
+   declare
+   my DEPT$audit%ROWTYPE;
+   begin
+       if inserting then my.change_type := 'I';
+       elsif updating then my.change_type :='U';
+       else my.change_type := 'D';
+       end if;
+ 
+       my.changed_by := user;
+       my.changed_time := sysdate;
+ 
+       case my.change_type
+       when 'I' then
+          my.DEPTNO := :new.DEPTNO;
+          my.DNAME := :new.DNAME;
+          my.LOC := :new.LOC;
+       else
+          my.DEPTNO := :old.DEPTNO;
+          my.DNAME := :old.DNAME;
+          my.LOC := :old.LOC;
+       end case;
+ 
+       insert into DEPT$audit values my;
+   end;
+   /
 
 
 
