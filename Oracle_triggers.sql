@@ -36,7 +36,61 @@ SQL> CREATE OR REPLACE TRIGGER myTrigger
     END IF;
   END;
   /
+28.1.2.	Placing triggers on tables
+
+Statement-level triggers
+
+Use statement-level triggers when you need to check business rules that are not row dependent
+
+SQL> create table Employee(
+    ID                 VARCHAR2(4 BYTE)         NOT NULL primary key,
+    First_Name         VARCHAR2(10 BYTE),
+    Last_Name          VARCHAR2(10 BYTE),
+    Start_Date         DATE,
+    End_Date           DATE,
+    Salary             Number(8,2),
+    City               VARCHAR2(10 BYTE),
+    Description        VARCHAR2(15 BYTE)
+  )
+  /
+ 
+ 
+ SQL> create or replace trigger emp_bid
+   before insert or delete
+   on employee
+   referencing new as new old as old
+  begin
+      if to_char(sysdate,'Dy') in ('Sat','Sun') then
+          raise_application_error(-20999,'No create/delete employees on weekend!');
+      end if;
+  end;
+  /
     
     
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
