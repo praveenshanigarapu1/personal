@@ -287,5 +287,23 @@ SQL> CREATE OR REPLACE TRIGGER myTrigger
 
 28.1.9.	Trigger with multiple triggering events
 
+SQL> CREATE OR REPLACE TRIGGER myTrigger
+  AFTER INSERT OR DELETE ON company
+  FOR EACH ROW
+  BEGIN
+    IF INSERTING THEN
+      UPDATE product_audit
+      SET num_rows =num_rows+1
+      WHERE product_id =:NEW.product_id;
+      IF (SQL%NOTFOUND) THEN
+        INSERT INTO product_audit VALUES (:NEW.product_id,1);
+      END IF;
+    ELSIF DELETING THEN
+      UPDATE product_audit
+      SET num_rows =num_rows-1
+      WHERE product_id =:OLD.product_id;
+    END IF;
+  END;
+  /
 
 
