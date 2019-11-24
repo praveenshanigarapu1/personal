@@ -285,7 +285,7 @@ SQL> CREATE OR REPLACE TRIGGER myTrigger
   END;
   /
 
-
+28.1.9.	Trigger with multiple triggering events
 
 
 
