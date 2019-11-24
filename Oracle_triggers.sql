@@ -234,9 +234,39 @@ SQL> CREATE OR REPLACE TRIGGER auditDEPTAR AFTER
    end;
    /
 
+28.1.7.	Trigger with a REFERENCING clause
 
+SQL> create table company(
+       product_id        number(4)    not null,
+       company_id          NUMBER(8)    not null,
+       company_short_name  varchar2(30) not null,
+       company_long_name   varchar2(60)
+    );
 
+Table created.
 
+SQL> create table product_audit(
+      product_id number(4) not null,
+      num_rows number(8) not null
+   );
+
+Table created.
+
+SQL> CREATE OR REPLACE TRIGGER myTrigger
+  AFTER INSERT ON company
+  REFERENCING NEW AS new_org
+  FOR EACH ROW
+  BEGIN
+    UPDATE product_audit
+    SET num_rows =num_rows+1
+    WHERE product_id =:new_org.product_id;
+    IF (SQL%NOTFOUND) THEN
+      INSERT INTO product_audit VALUES (:new_org.product_id,1);
+    END IF;
+  END;
+  /
+
+Trigger created.
 
 
 
