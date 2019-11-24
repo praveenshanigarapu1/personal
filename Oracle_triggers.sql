@@ -268,9 +268,22 @@ SQL> CREATE OR REPLACE TRIGGER myTrigger
 
 Trigger created.
 
+28.1.8.	Trigger with REFERENCING and WHEN clauses
 
-
-
+SQL> CREATE OR REPLACE TRIGGER myTrigger
+  AFTER INSERT ON company
+  REFERENCING NEW AS new_org
+  FOR EACH ROW
+  WHEN (new_org.product_id <>1)
+  BEGIN
+    UPDATE product_audit
+    SET num_rows =num_rows+1
+    WHERE product_id =:new_org.product_id;
+    IF (SQL%NOTFOUND) THEN
+      INSERT INTO product_audit VALUES (:new_org.product_id,1);
+    END IF;
+  END;
+  /
 
 
 
