@@ -65,9 +65,37 @@ SQL> create table Employee(
       end if;
   end;
   /
-    
-    
+ 
+ 28.1.3.Trigger Which Modifies a Mutating Table
+  SQL> create table Employee(
+     ID                 VARCHAR2(4 BYTE)         NOT NULL,
+     First_Name         VARCHAR2(10 BYTE),
+     Last_Name          VARCHAR2(10 BYTE),
+     Start_Date         DATE,
+     End_Date           DATE,
+     Salary             Number(8,2),
+     City               VARCHAR2(10 BYTE),
+     Description        VARCHAR2(15 BYTE)
+   )
+   /  
 
+SQL> CREATE OR REPLACE TRIGGER LimitSalary
+    BEFORE INSERT OR UPDATE OF salary ON employee
+    FOR EACH ROW
+  DECLARE
+    v_MaxSalary CONSTANT NUMBER := 2000;
+    v_CurrentSalary NUMBER;
+  BEGIN
+    SELECT salary
+      INTO v_CurrentSalary
+      FROM employee
+      WHERE id = :new.id;
+
+    IF v_CurrentSalary > v_MaxSalary THEN
+      RAISE_APPLICATION_ERROR(-20000, 'Too high in salary ' || :new.id);
+    END IF;
+  END LimitSalary;
+  /
 
 
 
