@@ -153,9 +153,31 @@ SQL> CREATE OR REPLACE TRIGGER SLimitSalary
     EmployeeData.v_NumEntries := 0;
   END SLimitSalary;
 
+28.1.5.	Raise Exception from trigger
 
+SQL> create or replace trigger emp_biu
+    before insert or update on employee
+   referencing new as new old as old
+    for each row
+   begin
+       if nvl(:new.salary,0) >= 10000 then
+           raise_application_error (-20999,'Salary with
+              commissions should be less than 10000');
+       end if;
+   end;
+   /
 
+Trigger created.
 
+SQL>
+SQL> update employee set salary = 20000;
+update employee set salary = 20000
+       *
+ERROR at line 1:
+ORA-20999: Salary with
+commissions should be less than 10000
+ORA-06512: at "JAVA2S.EMP_BIU", line 3
+ORA-04088: error during execution of trigger 'JAVA2S.EMP_BIU'
 
 
 
