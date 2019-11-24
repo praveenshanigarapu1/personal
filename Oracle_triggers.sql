@@ -96,11 +96,62 @@ SQL> CREATE OR REPLACE TRIGGER LimitSalary
     END IF;
   END LimitSalary;
   /
+28.1.4.	Solution for the Mutating Tables Problem
+SQL> CREATE OR REPLACE PACKAGE EmployeeData AS
+     TYPE t_Salary IS TABLE OF employee.salary%TYPE INDEX BY BINARY_INTEGER;
+     TYPE t_IDs IS TABLE OF employee.ID%TYPE INDEX BY BINARY_INTEGER;
+ 
+     v_EmployeeSalary t_Salary;
+     v_EmployeeIDs    t_IDs;
+     v_NumEntries    BINARY_INTEGER := 0;
+   END EmployeeData;
+   /
 
 
+SQL> CREATE OR REPLACE TRIGGER RLimitSalary
+    BEFORE INSERT OR UPDATE OF salary ON employee
+    FOR EACH ROW
+  BEGIN
+    /* Record the new data in EmployeeData. We don't make any
+       changes to employee, to avoid the ORA-4091 error. */
+    EmployeeData.v_NumEntries := EmployeeData.v_NumEntries + 1;
+    EmployeeData.v_EmployeeSalary(EmployeeData.v_NumEntries) := :new.salary;
+    EmployeeData.v_EmployeeIDs(EmployeeData.v_NumEntries) := :new.id;
+  END RLimitSalary;
+  /
 
 
+SQL> CREATE OR REPLACE TRIGGER SLimitSalary
+    AFTER INSERT OR UPDATE OF salary ON employee
+  DECLARE
+    v_MaxEmployees     CONSTANT NUMBER := 5;
+    v_CurrentEmployees NUMBER;
+    v_EmployeeID       employee.ID%TYPE;
+    v_Salary           employee.salary%TYPE;
+  BEGIN
+    /* Loop through each student inserted or updated, and verify
+       that we are still within the limit. */
+    FOR v_LoopIndex IN 1..EmployeeData.v_NumEntries LOOP
+      v_EmployeeID := EmployeeData.v_EmployeeIDs(v_LoopIndex);
+      v_Salary := EmployeeData.v_EmployeeSalary(v_LoopIndex);
 
+
+      SELECT COUNT(*)
+        INTO v_CurrentEmployees
+        FROM employee
+        WHERE salary = v_Salary;
+
+      -- If there isn't room, raise an error.
+      IF v_CurrentEmployees > v_MaxEmployees THEN
+        RAISE_APPLICATION_ERROR(-20000,
+          'Too much salary ' || v_Salary ||
+          ' because of employee ' || v_EmployeeID);
+      END IF;
+    END LOOP;
+
+    -- Reset the counter so the next execution will use new data.
+    EmployeeData.v_NumEntries := 0;
+  END SLimitSalary;
 
 
 
