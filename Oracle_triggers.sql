@@ -411,3 +411,32 @@ SQL> SELECT name,
         description,
         TO_CHAR (occurred_on, 'MM/DD/YYYY HH:MI:SS') occurred_on
    FROM employee_history;
+
+28.2.2.	System triggers
+
+There are a number of events where you can set system triggers such as
+
+ON LOGON, ON LOGOFF, ON STARTUP, ON DROP, ON TRUNCATE, and so on.
+
+You can even track when any DDL command (CREATE, DROP, ALTER, and so on) was executed in the database.
+
+You may place system triggers at the database level or schema level.
+
+At the database level, triggers fire for each event for all users.
+
+At the schema level, triggers fire for each event for a specific user.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
