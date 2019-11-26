@@ -513,9 +513,32 @@ SQL> CREATE OR REPLACE TRIGGER before_row_trigger
     DBMS_OUTPUT.PUT_LINE('Before Insert Row Level');
   END;
 
+28.5.1.	An after statement level trigger and an after row level trigger
 
+SQL> CREATE TABLE to_table
+  2  (col1 NUMBER);
 
+Table created.
 
+SQL> CREATE OR REPLACE TRIGGER statement_trigger
+ AFTER INSERT ON to_table
+ BEGIN
+   DBMS_OUTPUT.PUT_LINE('After Insert Statement Level');
+ END;
+ /
+
+Trigger created.
+
+SQL>
+SQL> CREATE OR REPLACE TRIGGER row_trigger
+  AFTER INSERT ON to_table
+  FOR EACH ROW
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('After Insert Row Level');
+  END;
+  /
+
+Trigger created.
 
 
 
