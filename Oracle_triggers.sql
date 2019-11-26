@@ -455,10 +455,63 @@ where
 11.trigger_condition specifies a Boolean condition that limits when a trigger actually runs its code.
 12.trigger_body contains the SQL and PL/SQL statements that perform the trigger's task.
 
+28.2.4.Trigger Blocks
+	    Triggers are used to define code that is executed when certain actions or events occur.
 
+The Syntax for Creating a Database Trigger
 
+CREATE [OR REPLACE] TRIGGER trigger_name
+    {BEFORE|AFTER} verb_list ON table_name
+    [[REFERENCING correlation_names] FOR EACH ROW [WHEN (condition)]]
 
+DECLARE
+    declarations
+BEGIN
+    pl/sql_code
+END;
+verb_list -- The SQL verbs that fire the trigger.
 
+table_name -- The table on which the trigger is defined.
+
+correlation_names -- Allows you to specify correlation names other than the default of OLD and NEW.
+
+condition -- An optional condition placed on the execution of the trigger.
+
+declarations -- Consists of any variable, record, or cursor declarations needed by this PL/SQL block.
+
+SQL> CREATE TABLE to_table
+    (col1 NUMBER);
+
+Table created.
+
+SQL> CREATE OR REPLACE TRIGGER before_statement_trigger
+   BEFORE INSERT ON to_table
+   BEGIN
+     DBMS_OUTPUT.PUT_LINE('Before Insert Statement Level');
+   END;
+   /
+
+Trigger created.
+
+SQL>
+SQL> drop table to_table;
+
+Table dropped.
+
+SQL>
+SQL>
+SQL> CREATE TABLE to_table
+    (col1 NUMBER);
+
+Table created.
+
+SQL>
+SQL> CREATE OR REPLACE TRIGGER before_row_trigger
+  BEFORE INSERT ON to_table
+  FOR EACH ROW
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('Before Insert Row Level');
+  END;
 
 
 
