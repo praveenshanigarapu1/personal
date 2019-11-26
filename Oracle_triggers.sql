@@ -539,6 +539,52 @@ SQL> CREATE OR REPLACE TRIGGER row_trigger
   /
 
 Trigger created.
+	       
+	       
+Schema Trigger	       
+28.13.1. Schema trigger	       
+	       
+SQL> CREATE TABLE ALTER_AUDIT_TRAIL (
+       object_owner        VARCHAR2(30),
+       object_name         VARCHAR2(30),
+       object_type         VARCHAR2(20),
+       altered_by_user     VARCHAR2(30),
+       alteration_time     DATE
+       );
+
+Table created.
+
+SQL>
+SQL> CREATE OR REPLACE TRIGGER audit_schema_changes
+   AFTER ALTER ON jeff.SCHEMA
+   BEGIN
+       INSERT INTO alter_audit_trail
+           (object_owner,
+            object_name,
+            object_type,
+            altered_by_user,
+            alteration_time
+            )
+           VALUES (sys.dictionary_obj_owner,
+                   sys.dictionary_obj_name,
+                   sys.dictionary_obj_type,
+                   sys.login_user,
+                   sysdate);
+   END;
+   /	       
+	       
+	       
+	       
+	       
+	       
+	       
+	       
+	       
+	       
+	       
+	       
+	       
+	       
 
 
 
