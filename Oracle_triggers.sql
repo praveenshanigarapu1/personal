@@ -426,8 +426,34 @@ At the database level, triggers fire for each event for all users.
 
 At the schema level, triggers fire for each event for a specific user.
 
+28.2.3.	Creating a Trigger
 
+You create a trigger using the CREATE TRIGGER statement.
 
+The simplified syntax for the CREATE TRIGGER statement is as follows:
+
+CREATE [OR REPLACE] TRIGGER trigger_name
+{BEFORE | AFTER | INSTEAD OF} trigger_event
+ON table_name
+[FOR EACH ROW [WHEN trigger_condition]]
+BEGIN
+  trigger_body
+END trigger_name;
+	       
+where
+
+1.OR REPLACE specifies the trigger is to replace an existing trigger if present.
+2.BEFORE specifies the trigger fires before the triggering event is performed.
+3.AFTER specifies the trigger fires after the triggering event is performed.
+4.INSTEAD OF specifies the trigger fires instead of performing the triggering event.
+5.trigger_event specifies the event that causes the trigger to fire.
+6.table_name specifies the table that the trigger references.
+7.FOR EACH ROW specifies the trigger is a row-level trigger.
+8.A row-level trigger is run for each row when the trigger fires.
+9.If you omit FOR EACH ROW, the trigger is a statement-level trigger.
+10.A statement-level trigger is run once when the trigger fires regardless of the number of rows affected.
+11.trigger_condition specifies a Boolean condition that limits when a trigger actually runs its code.
+12.trigger_body contains the SQL and PL/SQL statements that perform the trigger's task.
 
 
 
