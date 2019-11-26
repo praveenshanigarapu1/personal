@@ -306,4 +306,108 @@ SQL> CREATE OR REPLACE TRIGGER myTrigger
   END;
   /
 
+28.2.1
 
+A trigger is a procedure that is run automatically by the database when a specified SQL DML INSERT, UPDATE, or DELETE statement is run against a table.
+
+Triggers are useful for doing things like advanced auditing of changes made to column values in a table.
+
+When a Trigger Runs
+
+1.A trigger can fire before or after the SQL statement runs.
+2.A trigger can may be run once for every row affected. Such a trigger is known as a row-level trigger.
+3.A trigger can may be run for all the rows. Such trigger is known as a statement-level trigger.
+4.A row-level trigger has access to the old and new column values when the trigger fires as a result of an UPDATE statement on that column.
+5.The firing of a trigger may also be limited using a trigger condition.
+
+Different events may fire a trigger, but these events are always divided into three groups:
+
+DML triggers,
+INSTEAD OF triggers, and
+system event triggers.
+DML triggers are the triggers on INSERT/UPDATE/DELETE operations in any table.
+
+SQL> CREATE TABLE employee_history (
+      name VARCHAR2(100),
+      description VARCHAR2(255),
+      occurred_on DATE);
+
+Table created.
+
+SQL>
+SQL>
+SQL> CREATE TABLE employee_compensation (
+    company VARCHAR2(100),
+    name VARCHAR2(100),
+    compensation NUMBER,
+    layoffs NUMBER);
+
+Table created.
+
+SQL>
+SQL>
+SQL> CREATE OR REPLACE PROCEDURE employee_audit (
+      name IN VARCHAR2,
+      description IN VARCHAR2,
+      occurred_on IN DATE
+      )
+   IS
+      PRAGMA AUTONOMOUS_TRANSACTION;
+   BEGIN
+      INSERT INTO employee_history VALUES (
+         employee_audit.name,
+         employee_audit.description,
+         employee_audit.occurred_on
+         );
+      COMMIT;
+   END;
+   /
+
+Procedure created.
+
+SQL>
+SQL>
+SQL>
+SQL> CREATE OR REPLACE TRIGGER bef_ins_ceo_comp
+   BEFORE INSERT ON employee_compensation FOR EACH ROW
+   DECLARE
+      ok BOOLEAN := TRUE;
+   BEGIN
+      IF ok
+      THEN
+         employee_audit (
+            :new.name, 'BEFORE INSERT', SYSDATE);
+      END IF;
+   END;
+   /
+
+Trigger created.
+
+SQL>
+SQL>
+SQL>
+SQL> SELECT name,
+         description,
+         TO_CHAR (occurred_on, 'MM/DD/YYYY HH:MI:SS') occurred_on
+    FROM employee_history;
+
+no rows selected
+
+SQL>
+SQL> BEGIN
+      INSERT INTO employee_compensation VALUES ('M', 'J', 9100000, 2700);
+ 
+      INSERT INTO employee_compensation VALUES ('A', 'H', 33200000, 3300);
+ 
+      INSERT INTO employee_compensation VALUES ('E', 'G', 10700000, 20100);
+ 
+   END;
+   /
+
+PL/SQL procedure successfully completed.
+
+SQL>
+SQL> SELECT name,
+        description,
+        TO_CHAR (occurred_on, 'MM/DD/YYYY HH:MI:SS') occurred_on
+   FROM employee_history;
