@@ -297,14 +297,38 @@ SQL> declare
     end;
     /
 Employee:TestEmp has income 2000
+ 
+  How to oracle call own type member function
                               
+ create type foo_type as object (
+        bar integer(2),
+        bar2  varchar(200),
+
+        member function get return integer
+)                             
                               
+CREATE TYPE BODY foo_type as
+member function get return integer is
+begin
+   return bar;
+END;
+END; 
                               
+Then I created a table with this type:
                               
+CREATE TABLE test_table(
+    foo1 foo_type
+)                              
                               
-                              
-                              
-                              
+SQL> INSERT INTO test_table (foo1) VALUES (foo_type(1, 'a'));
+
+1 row created.
+
+SQL> select t.foo1.get() from test_table t;
+
+T.FOO1.GET()
+------------
+           1                              
                               
                               
                               
