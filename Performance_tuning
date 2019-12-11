@@ -1,0 +1,19 @@
+it should be first command
+conn sys as sysdba;
+no need to enter password just enter;
+
+select * from v$database;
+des v$database
+OPEN_MODE
+
+
+select name, OPEN_MODE from v$database;
+
+
+create table  p_t1(c1 number(3) primary key, c2 Varchar2(10), c3 number(3));
+
+insert into p_t1 values(&c1, &c2, &c3);
+
+select count(*) from plan_table
+
+explain plan for select * from p_t1; 
