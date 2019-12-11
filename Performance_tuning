@@ -29,3 +29,60 @@ show user;
 select sid, serial#, username from v$session; 
 
 execute dbms_monitor.session_trace_enable(1,1,true,false);
+
+execute dbms_monitor.session_trace_disable(1,1);
+
+invoking session
+----------------
+
+execute dbms_monitor.session_trace_enable();
+execute dbms_monitor.session_trace_disable();
+
+
+sql Tracing
+-----------
+
+alter session set sql_trace = true;
+exec dbms_session.session_trace_enable(true,false);
+--exec dbms_session.session_trace_enable(true,false);
+
+select * from p_t1;
+CREATE TABLE p_t1
+  AS (SELECT * FROM prvn.p_t1);
+
+identify trace file
+-------------------
+alter session set tracefile_identifier=prvn;
+
+select s.sql_trace, s.sql_trace_waits, s.sql_trace_binds from v$session s join V$process p on (p.addr = s.paddr);
+
+tkprof
+-----
+show parameter user_dump;
+alter session set tracefile_identifier=prvn;
+alter session set sql_trace = true;
+select s.sql_trace, s.sql_trace_waits, s.sql_trace_binds,traceid, tracefile from v$session s join V$process p on (p.addr = s.paddr);
+
+TRACEID
+--------------------------------------------------------------------------------
+TRACEFILE
+--------------------------------------------------------------------------------
+ENABLED  TRUE  FALSE
+PRVN
+C:\ORACLEXE\APP\ORACLE\diag\rdbms\xe\xe\trace\xe_ora_3460_PRVN.trc
+
+select s.sql_trace, s.sql_trace_waits, s.sql_trace_binds,traceid, tracefile from v$session s join V$process p on (p.addr = s.paddr)
+where audsid = userenv('sessionid');
+
+
+C:\oraclexe\app\oracle\diag\rdbms\xe\xe\trace
+
+ select * from prvn.emp;
+  select * from prvn.p_t1;
+
+tkprof xe_ora_3460_PRVN.trc
+output prvn_trace.txt
+
+
+
+
