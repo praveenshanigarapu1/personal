@@ -17,3 +17,15 @@ insert into p_t1 values(&c1, &c2, &c3);
 select count(*) from plan_table
 
 explain plan for select * from p_t1; 
+
+
+select * from table(SYS.DBMS_XPLAN.DISPLAY)
+select * from table(DBMS_XPLAN.DISPLAY)
+
+select SQL_ID, CHILD_NUMBER, sql_text from v$sql where sql_text like 'select %';
+
+show user;
+
+select sid, serial#, username from v$session; 
+
+execute dbms_monitor.session_trace_enable(1,1,true,false);
