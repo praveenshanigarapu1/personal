@@ -80,8 +80,25 @@ C:\oraclexe\app\oracle\diag\rdbms\xe\xe\trace
  select * from prvn.emp;
   select * from prvn.p_t1;
 
+cd C:\ORACLEXE\APP\ORACLE\diag\rdbms\xe\xe\trace\
+
 tkprof xe_ora_3460_PRVN.trc
 output prvn_trace.txt
+
+Autotrace
+---------
+
+set autotrace traceonly;
+set autotrace exp;
+set autotrace stat;
+select * from prvn.p_t1;
+set autotrace off;
+set autotrace on;
+
+AWR, ADDM and ASH reports
+-------------------------
+show parameter statistics_level;
+
 
 
 
