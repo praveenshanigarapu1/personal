@@ -393,40 +393,399 @@ SQL> commit;
 
 Commit complete.
 
+ Complex views
+ -------------
+ 
+SQL> CREATE OR REPLACE VIEW V_COMP_EMP AS SELECT deptno, SUM(sal) AS total_sal FROM COPY_EMP GROUP BY deptno;
+
+View created.
+
+SQL> UPDATE V_COMP_EMP SET SAL=2976 where SAL =2975;
+UPDATE V_COMP_EMP SET SAL=2976 where SAL =2975
+                                     *
+ERROR at line 1:
+ORA-00904: "SAL": invalid identifier
+
+SQL> UPDATE V_COMP_EMP SET deptno=21 where deptno =20;
+UPDATE V_COMP_EMP SET deptno=21 where deptno =20
+       *
+ERROR at line 1:
+ORA-01732: data manipulation operation not legal on this view
+ 
+ 
+CREATE OR REPLACE VIEW V_COMP_EMP AS SELECT deptno, SUM(sal)  FROM COPY_EMP GROUP BY deptno; 
+ 
+SQL> CREATE OR REPLACE VIEW V_COMP_EMP AS SELECT deptno, SUM(sal)  FROM COPY_EMP GROUP BY deptno;
+CREATE OR REPLACE VIEW V_COMP_EMP AS SELECT deptno, SUM(sal)  FROM COPY_EMP GROUP BY deptno
+                                                    *
+ERROR at line 1:
+ORA-00998: must name this expression with a column alias 
+
+SQL> create user u1 identified by u1;
+
+User created.
+
+SQL> conn u1/u1;
+ERROR:
+ORA-01045: user U1 lacks CREATE SESSION privilege; logon denied
+
+ grant create session to u1;
+ 
+ SQL>  grant create session to u1;
+
+Grant succeeded.
+
+SQL> conn u1/u1;
+Connected.
+SQL>
+
+SELECT * FROM V_COMP_EMP;
+
+SELECT * FROM prvn.V_COMP_EMP
+                   *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+SQL> conn prvn/prvn1
+Connected.
+SQL> grant select on V_COMP_EMP to u1;
+
+Grant succeeded.
+
+SQL> conn u1/u1;
+
+Connected.
+
+SQL> SELECT * FROM prvn.V_COMP_EMP;
+
+    DEPTNO  TOTAL_SAL
+---------- ----------
+        30       9400
+        20      10875
+        10       8750
+        
+        SEQUENCES
+        ==========
+
+DESC user_sequences;
+
+SQL> DESC user_sequences;
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ SEQUENCE_NAME                                                                                                     NOT NULL VARCHAR2(30)
+ MIN_VALUE                                                                                                                 NUMBER
+ MAX_VALUE                                                                                                                 NUMBER
+ INCREMENT_BY                                                                                                      NOT NULL NUMBER
+ CYCLE_FLAG                                                                                                                VARCHAR2(1)
+ ORDER_FLAG                                                                                                                VARCHAR2(1)
+ CACHE_SIZE                                                                                                        NOT NULL NUMBER
+ LAST_NUMBER                                                                                                       NOT NULL NUMBER
+ 
+SQL>  SELECT * FROM user_sequences;
+
+no rows selected
+
+SQL> CREATE SEQUENCE S1;
+
+Sequence created.
+
+SQL> DESC s1
+SP2-0381: DESCRIBE sequence is not available
+ 
+SQL> CREATE OR REPLACE SEQUENCE S1;
+CREATE OR REPLACE SEQUENCE S1
+                  *
+ERROR at line 1:
+ORA-00922: missing or invalid option
+ 
+ SQL> SELECT * FROM user_sequences;
+
+SEQUENCE_NAME                   MIN_VALUE  MAX_VALUE INCREMENT_BY C O CACHE_SIZE LAST_NUMBER
+------------------------------ ---------- ---------- ------------ - - ---------- -----------
+EMPLOYEES_SEQ                           1 1.0000E+28            1 N N          0           4
+S1                                      1 1.0000E+28            1 N N         20           1
+TEST_SEQ                                1 1.0000E+28            1 N N         20           1
+ 
+SQL>  SELECT S1.CURRVAL FROM DUAL;
+ SELECT S1.CURRVAL FROM DUAL
+        *
+ERROR at line 1:
+ORA-08002: sequence S1.CURRVAL is not yet defined in this session
+ 
+ SELECT S1.NEXTVAL FROM DUAL;
+ 
+ SQL> SELECT S1.NEXTVAL FROM DUAL;
+
+   NEXTVAL
+----------
+         1
+ 
+ 
+SQL> SELECT S1.CURRVAL FROM DUAL;
+
+   CURRVAL
+----------
+         1
+
+aNY POINT OF TIME buffer contains one statement and its out value either it failure or success message
+ 
+ SQL> SELECT S1.CURRVAL FROM DUAL;
+
+   CURRVAL
+----------
+         1
+
+SQL> /
+
+   CURRVAL
+----------
+         1
+
+SQL> /
+
+   CURRVAL
+----------
+         1
+
+SQL>
+SQL> SELECT S1.NEXTVAL FROM DUAL;
+
+   NEXTVAL
+----------
+         2
+
+SQL> /
+
+   NEXTVAL
+----------
+         3
+
+SQL>
+SQL> /
+
+   NEXTVAL
+----------
+         4
+
+SQL> /
+
+   NEXTVAL
+----------
+         5
+         
+            NEXTVAL
+----------
+        20
+
+SQL> SELECT * FROM user_sequences;
+
+SEQUENCE_NAME                   MIN_VALUE  MAX_VALUE INCREMENT_BY C O CACHE_SIZE LAST_NUMBER
+------------------------------ ---------- ---------- ------------ - - ---------- -----------
+EMPLOYEES_SEQ                           1 1.0000E+28            1 N N          0           4
+S1                                      1 1.0000E+28            1 N N         20          21
+TEST_SEQ                                1 1.0000E+28            1 N N         20           1
+
+SQL> SELECT S1.NEXTVAL FROM DUAL;
+
+   NEXTVAL
+----------
+        21
+
+SQL> SELECT * FROM user_sequences;
+
+SEQUENCE_NAME                   MIN_VALUE  MAX_VALUE INCREMENT_BY C O CACHE_SIZE LAST_NUMBER
+------------------------------ ---------- ---------- ------------ - - ---------- -----------
+EMPLOYEES_SEQ                           1 1.0000E+28            1 N N          0           4
+S1                                      1 1.0000E+28            1 N N         20          41
+TEST_SEQ                                1 1.0000E+28            1 N N         20           1
+ 
+ 
+  CREATE  SEQUENCE SS1
+  INCREMENT BY 2
+  MINVALUE 101
+  MAXVALUE 150
+  NOCYCLE
+  NOCACHE;
+  
+  Sequence created.
+  
+ SQL> SELECT * FROM user_sequences;
+ 
+ SEQUENCE_NAME                   MIN_VALUE  MAX_VALUE INCREMENT_BY C O CACHE_SIZE LAST_NUMBER
+------------------------------ ---------- ---------- ------------ - - ---------- -----------
+EMPLOYEES_SEQ                           1 1.0000E+28            1 N N          0           4
+S1                                      1 1.0000E+28            1 N N         20          41
+SS1                                   101        150            2 N N          0         101
+TEST_SEQ                                1 1.0000E+28            1 N N         20           1
+ 
+ 
+    NEXTVAL
+----------
+       149
+
+SQL> /
+SELECT SS1.NEXTVAL FROM DUAL
+*
+ERROR at line 1:
+ORA-08004: sequence SS1.NEXTVAL exceeds MAXVALUE and cannot be instantiated
+ 
+  CREATE  SEQUENCE SS2
+  INCREMENT BY 2
+  MINVALUE 101
+  MAXVALUE 150
+  NOCYCLE
+  CACHE 0;
+ 
+ SQL>  CREATE  SEQUENCE SS2  INCREMENT BY 2  MINVALUE 101  MAXVALUE 150  NOCYCLE  CACHE 0;
+ CREATE  SEQUENCE SS2  INCREMENT BY 2  MINVALUE 101  MAXVALUE 150  NOCYCLE  CACHE 0
+*
+ERROR at line 1:
+ORA-04010: the number of values to CACHE must be greater than 1
+ 
+ CREATE  SEQUENCE SS2
+  INCREMENT BY 2
+  MINVALUE 101
+  MAXVALUE 110
+  CYCLE
+  CACHE 2;
+ 
+ 
+ ALTER SEQUENCE SS2 CACHE 3;
+ 
+ 
+SQL> ALTER SEQUENCE SS2 CACHE 3;
+
+Sequence altered.
+
+ALTER SEQUENCE SS2 CACHE 3 MINVALUE 1 MAXVALUE 1;
+
+ SQL> ALTER SEQUENCE SS2 CACHE 3 MINVALUE 1 MAXVALUE 1;
+ALTER SEQUENCE SS2 CACHE 3 MINVALUE 1 MAXVALUE 1
+*
+ERROR at line 1:
+ORA-04004: MINVALUE must be less than MAXVALUE
+ 
+ --DECREMENTAL sEQUENCE
+ 
+CREATE  SEQUENCE SS3
+  INCREMENT BY -1
+  MINVALUE 1
+  MAXVALUE 5
+  CYCLE
+  CACHE 2; 
+ 
+ 
+ SQL> SELECT SS3.NEXTVAL FROM DUAL;
+
+   NEXTVAL
+----------
+         5
+
+SQL>
+SQL> /
+
+   NEXTVAL
+----------
+         4
+
+SQL> /
+
+   NEXTVAL
+----------
+         3
+
+SQL> /
+
+   NEXTVAL
+----------
+         2
+
+SQL> /
+
+   NEXTVAL
+----------
+         1
+
+SQL> /
+
+   NEXTVAL
+----------
+         5
+ 
+ CREATE  SEQUENCE SS4
+  INCREMENT BY 1
+  START WITH 101  --HIGHEST PRIORITY
+  MINVALUE 1
+  MAXVALUE 105
+  CYCLE
+  CACHE 2;
+  
+ SQL> ALTER SEQUENCE SS4  START WITH 2;
+ALTER SEQUENCE SS4  START WITH 2
+                    *
+ERROR at line 1:
+ORA-02283: cannot alter starting sequence number
+ 
+ 
+ CREATE  SEQUENCE SS5
+  INCREMENT BY 1
+  START WITH 1 --HIGHEST PRIORITY
+  MINVALUE 1
+  MAXVALUE 10
+  CYCLE
+  CACHE 11;
  
  
  
+SQL> CREATE  SEQUENCE SS5  INCREMENT BY 1  START WITH 1 --HIGHEST PRIORITY  MINVALUE 1  MAXVALUE 10  CYCLE  CACHE 11;
+
+Sequence created.
+
+SQL> DROP SEQUENCE SS5;
+
+Sequence dropped.
  
  
+ CREATE  SEQUENCE SS5
+  INCREMENT BY 1
+  MINVALUE 1
+  MAXVALUE 10
+  CYCLE
+  CACHE 11;
+ 
+ SQL> CREATE  SEQUENCE SS5  INCREMENT BY 1  MINVALUE 1  MAXVALUE 10  CYCLE  CACHE 11;
+CREATE  SEQUENCE SS5  INCREMENT BY 1  MINVALUE 1  MAXVALUE 10  CYCLE  CACHE 11
+*
+ERROR at line 1:
+ORA-04013: number to CACHE must be less than one cycle
+ 
+ IT GET ONLY IN THE ABSEMCE OF (  START WITH  )
  
  
+ CREATE  SEQUENCE SS6
+  INCREMENT BY 0.1
+  MINVALUE 1
+  MAXVALUE 10
  
  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+ SQL>  CREATE  SEQUENCE SS6  INCREMENT BY 0.1  MINVALUE 1  MAXVALUE 10;
+ CREATE  SEQUENCE SS6  INCREMENT BY 0.1  MINVALUE 1  MAXVALUE 10
+
+
+ERROR at line 1:
+ORA-04001: sequence parameter INCREMENT must be an integer
+
+ SQL>  SELECT SS3.NEXTVAL, SS3.NEXTVAL FROM DUAL;
+
+   NEXTVAL    NEXTVAL
+---------- ----------
+         2          2
+
+SQL>  SELECT SS3.NEXTVAL, SS3.NEXTVAL FROM DUAL;
+
+   NEXTVAL    NEXTVAL
+---------- ----------
+         1          1
+         
+  IF WE DROP THEN WE LOSE ALL GRANT PREVILLAGES, SO WE REGRANT ALL PRIVILAGES.       
+
