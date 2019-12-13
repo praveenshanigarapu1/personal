@@ -287,26 +287,146 @@ OBJECT_NAME            OBJECT_TYPE          STATUS
 V_EMP5                 VIEW                 INVALID
 
 
+Read only views
+----------------
 
 
+SQL> CREATE OR REPLACE VIEW V_RO_EMP AS SELECT * FROM emp WITH READ ONLY;
+
+View created.
+
+SQL> CREATE OR REPLACE VIEW V_C_TEST_RO_EMP AS SELECT * FROM COPY_EMP ;
+
+View created.
+
+SQL> select * FROM V_C_TEST_RO_EMP where deptno =20;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
+
+SQL> UPDATE V_C_TEST_RO_EMP SET SAL=2975 where deptno =20;
+
+5 rows updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select * FROM V_C_TEST_RO_EMP where deptno =20;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7788 SCOTT      ANALYST         7566 19-APR-87       2975                    20
+      7902 FORD       ANALYST         7566 03-DEC-81       2975                    20
+      7369 SMITH      CLERK           7902 17-DEC-80       2975                    20
+      7876 ADAMS      CLERK           7788 23-MAY-87       2975                    20
 
 
+select * FROM COPY_EMP  where deptno =20;
+
+SQL> SELECT object_name,object_type, status FROM user_objects WHERE object_name like '%EMP%'
+----------------------------------------------------------------------------------------
+
+SQL> create table emp as select * from emp_t;
+
+SQL> CREATE OR REPLACE VIEW VC_EMP AS SELECT * FROM COPY_EMP WHERE deptno = 20 WITH CHECK OPTION;
+
+View created.
+
+ UPDATE VC_EMP SET SAL=2975 where deptno =20;
+
+SQL>  UPDATE VC_EMP SET SAL=2975 where deptno =20;
+
+5 rows updated.
 
 
+SQL> select * FROM COPY_EMP  where deptno =20;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7788 SCOTT      ANALYST         7566 19-APR-87       2975                    20
+      7902 FORD       ANALYST         7566 03-DEC-81       2975                    20
+      7369 SMITH      CLERK           7902 17-DEC-80       2975                    20
+      7876 ADAMS      CLERK           7788 23-MAY-87       2975                    20
+
+ SQL> DROP TABLE COPY_EMP;
+
+Table dropped.
+
+SQL> create table copy_emp as select * from emp;
+
+Table created.
+
+SQL>  select * FROM COPY_EMP  where deptno =20;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
+
+UPDATE VC_EMP SET SAL=2975 where deptno =20;
+ 
+CREATE OR REPLACE VIEW VC_EMP AS SELECT * FROM COPY_EMP WHERE SAL = 2975 WITH CHECK OPTION; 
+ 
+ SQL> CREATE OR REPLACE VIEW VC_EMP AS SELECT * FROM COPY_EMP WHERE SAL = 2975 WITH CHECK OPTION;
+
+View created.
 
 
+SQL> UPDATE VC_EMP SET SAL=2976 where SAL =2975;
+UPDATE VC_EMP SET SAL=2976 where SAL =2975
+       *
+ERROR at line 1:
+ORA-01402: view WITH CHECK OPTION where-clause violation
 
+SQL> commit;
 
+Commit complete.
 
-
-
-
-
-
-
-
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
