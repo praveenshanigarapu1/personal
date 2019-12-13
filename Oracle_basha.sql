@@ -132,3 +132,181 @@ V_EMP                          VIEW
 
 USER_VIEWS is the data dictionary
 SQL> select * from USER_VIEWS;
+
+SQL> DESC USER_VIEWS;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ VIEW_NAME                                             NOT NULL VARCHAR2(30)
+ TEXT_LENGTH                                                    NUMBER
+ TEXT                                                           LONG
+ TYPE_TEXT_LENGTH                                               NUMBER
+ TYPE_TEXT                                                      VARCHAR2(4000)
+ OID_TEXT_LENGTH                                                NUMBER
+ OID_TEXT                                                       VARCHAR2(4000)
+ VIEW_TYPE_OWNER                                                VARCHAR2(30)
+ VIEW_TYPE                                                      VARCHAR2(30)
+ SUPERVIEW_NAME                                                 VARCHAR2(30)
+ EDITIONING_VIEW                                                VARCHAR2(1)
+ READ_ONLY                                                      VARCHAR2(1)
+
+select VIEW_NAME ,TEXT_LENGTH,TEXT  from USER_VIEWS;
+SQL> select VIEW_NAME ,TEXT_LENGTH,TEXT  from USER_VIEWS;
+
+VIEW_NAME                      TEXT_LENGTH TEXT
+------------------------------ ----------- --------------------------------------------------------------------------------
+V_EMP                                   67 SELECT  EMPNO, ENAME,JOB, MGR, HIREDATE, SAL, COMM, DEPTNO FROM emp
+
+
+SQL> CREATE OR REPLACE VIEW  vv_emp as SELECT * FROM v_emp;
+
+View created.
+
+
+SQL> Select text  from USER_VIEWS WHERE view_name='V_EMP';
+
+TEXT
+--------------------------------------------------------------------------------
+SELECT  EMPNO, ENAME,JOB, MGR, HIREDATE, SAL, COMM, DEPTNO FROM emp
+
+SELECT * FROM v_emp;
+
+
+HOW a view gets dat from base table
+-----------------------------------
+SELECT * FROM (Select text  from USER_VIEWS WHERE view_name='V_EMP');
+
+SELECT * FROM (SELECT  EMPNO, ENAME,JOB, MGR, HIREDATE, SAL, COMM, DEPTNO FROM emp);
+
+Force View
+---------
+SQL> DESC emp5
+ERROR:
+ORA-04043: object emp5 does not exist
+
+SQL> CREATE OR REPLACE VIEW v_emp5 AS SELECT * FROM emp5;
+CREATE OR REPLACE VIEW v_emp5 AS SELECT * FROM emp5
+                                               *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> CREATE OR REPLACE FORCE VIEW v_emp5 AS SELECT * FROM emp5;
+
+Warning: View created with compilation errors.
+
+SQL> SELECT * FROM v_emp5;
+SELECT * FROM v_emp5
+              *
+ERROR at line 1:
+ORA-04063: view "PRVN.V_EMP5" has errors
+
+SQL> select VIEW_NAME ,TEXT_LENGTH,TEXT  from USER_VIEWS;
+
+VIEW_NAME                      TEXT_LENGTH TEXT
+------------------------------ ----------- --------------------------------------------------------------------------------
+V_EMP                                   67 SELECT  EMPNO, ENAME,JOB, MGR, HIREDATE, SAL, COMM, DEPTNO FROM emp
+VV_EMP                                  78 SELECT "EMPNO","ENAME","JOB","MGR","HIREDATE","SAL","COMM","DEPTNO" FROM v_emp
+V_EMP5                                  18 SELECT * FROM emp5
+
+User object
+-----------
+
+SQL> DESC user_objects;
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ OBJECT_NAME                                                                                                               VARCHAR2(128)
+ SUBOBJECT_NAME                                                                                                            VARCHAR2(30)
+ OBJECT_ID                                                                                                                 NUMBER
+ DATA_OBJECT_ID                                                                                                            NUMBER
+ OBJECT_TYPE                                                                                                               VARCHAR2(19)
+ CREATED                                                                                                                   DATE
+ LAST_DDL_TIME                                                                                                             DATE
+ TIMESTAMP                                                                                                                 VARCHAR2(19)
+ STATUS                                                                                                                    VARCHAR2(7)
+ TEMPORARY                                                                                                                 VARCHAR2(1)
+ GENERATED                                                                                                                 VARCHAR2(1)
+ SECONDARY                                                                                                                 VARCHAR2(1)
+ NAMESPACE                                                                                                                 NUMBER
+ EDITION_NAME                                                                                                              VARCHAR2(30)
+
+SQL> SELECT object_name,object_type, status FROM user_objects WHERE object_name = 'V_EMP5';
+
+
+OBJECT_NAME           OBJECT_TYPE         STATUS
+---------------------------------------------------------
+V_EMP5                   VIEW             INVALID
+                         
+SQL> CREATE TABLE EMP5 AS SELECT * FROM EMP;
+
+Table created.
+
+SQL> SELECT object_name,object_type, status FROM user_objects WHERE object_name = 'V_EMP5';
+
+OBJECT_NAME                                                                                                                                                             OBJECT_TYPE          STATUS
+-------------------------------------------------------------------------------------------------------------------------------- ------------------- -------
+V_EMP5                                                                                                                                                                  VIEW                 INVALID
+
+SQL> SELECT * FROM v_emp5;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
+
+14 rows selected.
+
+SQL> SELECT object_name,object_type, status FROM user_objects WHERE object_name = 'V_EMP5';
+
+OBJECT_NAME                                                                         OBJECT_TYPE          STATUS
+-----------------------------------------------------------------------------------------------------------------------
+
+V_EMP5                                                                              VIEW                 VALID
+
+DROP TABLE EMP5;
+
+SQL> DROP TABLE EMP5;
+
+Table dropped.
+
+SQL> SELECT object_name,object_type, status FROM user_objects WHERE object_name = 'V_EMP5';
+
+OBJECT_NAME            OBJECT_TYPE          STATUS
+------------------------------------------------------
+V_EMP5                 VIEW                 INVALID
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
