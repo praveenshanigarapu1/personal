@@ -1569,6 +1569,213 @@ ORA-04044: procedure, function, package, or type is not allowed here
 
 
 
+SQL> ALTER TYPE TYPE_ADDRESS FINAL;
+
+Type altered.
+
+SQL> ALTER TYPE TYPE_ADDRESS NOT FINAL;
+
+Type altered.
+
+SQL> ALTER TYPE TYPE_ADDRESS INSTANTIABLE;
+
+Type altered.
+
+SQL> ALTER TYPE TYPE_ADDRESS NOT INSTANTIABLE;
+
+Type altered.
+
+SQL> ALTER TYPE TYPE_ADDRESS ADD (C1 NUMBER);
+ALTER TYPE TYPE_ADDRESS ADD (C1 NUMBER)
+*
+ERROR at line 1:
+ORA-06545: PL/SQL: compilation error - compilation aborted
+ORA-06550: line 10, column 30:
+PLS-00103: Encountered the symbol "(" when expecting one of the following:
+not final instantiable order overriding static member
+constructor map attribute
+The symbol "attribute" was substituted for "(" to continue.
+ORA-06550: line 0, column 0:
+PLS-00565: TYPE_ADDRESS must be completed as a potential REF target (object
+type)
+
+DDL OPERATIONS
+----------------------------------------
+SQL> ALTER TYPE TYPE_ADDRESS ADD ATTRIBUTE(C1 NUMBER);
+
+Type altered.
+
+SQL> ALTER TYPE TYPE_ADDRESS ADD ATTRIBUTE C1 NUMBER;
+ALTER TYPE TYPE_ADDRESS ADD ATTRIBUTE C1 NUMBER
+*
+ERROR at line 1:
+ORA-22324: altered type has compilation errors
+ORA-22328: object "PRVN"."TYPE_ADDRESS" has errors.
+PLS-00410: duplicate fields in RECORD,TABLE or argument list are not permitted
+ORA-06550: line 0, column 0:
+PL/SQL: Compilation unit analysis terminated
+
+
+SQL> ALTER TYPE TYPE_ADDRESS ADD ATTRIBUTE C2 NUMBER;
+
+Type altered.
+
+SQL> ALTER TYPE TYPE_ADDRESS DROP C2;
+ALTER TYPE TYPE_ADDRESS DROP C2
+*
+ERROR at line 1:
+ORA-06545: PL/SQL: compilation error - compilation aborted
+ORA-06550: line 12, column 31:
+PLS-00103: Encountered the symbol "C2" when expecting one of the following:
+not final instantiable order overriding static member
+constructor map attribute
+The symbol "attribute" was substituted for "C2" to continue.
+ORA-06550: line 0, column 0:
+PLS-00565: TYPE_ADDRESS must be completed as a potential REF target (object
+type)
+
+
+SQL> ALTER TYPE TYPE_ADDRESS DROP ATTRIBUTE C2;
+
+Type altered.
+
+SQL> ALTER TYPE TYPE_ADDRESS DROP ATTRIBUTE C1;
+
+Type altered.
+
+SQL> DESC TYPE_ADDRESS
+ERROR:
+ORA-22337: the type of accessed object has been evolved
+
+
+SQL> ALTER TYPE TYPE_ADDRESS COMPILE;
+
+Type altered.
+
+SQL> DESC TYPE_ADDRESS
+ERROR:
+ORA-22337: the type of accessed object has been evolved
+
+ITS not adviasable to alter type
+
+
+SQL> DROP TYPE TYPE_ADDRESS;
+
+Type dropped.
+
+SQL> SELECT object_name,object_type, status FROM user_objects WHERE object_type = 'TYPE';
+
+no rows selected
+
+CREATE OBJECT WITH 2 LEVELS
+---------------------------
+
+SQL> CREATE Or Replace TYPE AREA_Type AS OBJECT (
+  2  street VARCHAR2(5),
+  3  LOCALITY   VARCHAR2(5)
+  4  );
+  5  /
+
+Type created.
+
+SQL> CREATE Or Replace TYPE ADD_Type AS OBJECT (
+  2  area AREA_Type,
+  3  CITY   VARCHAR2(5)
+  4  );
+  5  /
+
+Type created.
+
+SQL> DESC ADD_Type
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ AREA                                               AREA_TYPE
+ CITY                                               VARCHAR2(5)
+
+SQL> SELECT object_name,object_type, status FROM user_objects WHERE object_type = 'TYPE';
+
+OBJECT_NAME          OBJECT_TYPE         STATUS
+-------------------- ------------------- -------
+ADD_TYPE             TYPE                VALID
+AREA_TYPE            TYPE                VALID
+
+SQL> SHOW DESC
+describe DEPTH 1 LINENUM OFF INDENT ON
+SQL> SET DESC DEPTH 2
+SQL> SHOW DESC
+describe DEPTH 2 LINENUM OFF INDENT ON
+SQL> DESC ADD_Type
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ AREA                                               AREA_TYPE
+   STREET                                           VARCHAR2(5)
+   LOCALITY                                         VARCHAR2(5)
+ CITY                                               VARCHAR2(5)
+
+SQL> CREATE Or Replace TYPE ADDRESS_Type AS OBJECT (
+  2  area ADD_Type,
+  3  PIN   NUMBER(6)
+  4  );
+  5  /
+
+Type created.
+
+SQL> SHOW DESC
+describe DEPTH 2 LINENUM OFF INDENT ON
+SQL> SET DESC DEPTH 3
+SQL> DESC ADDRESS_Type
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ AREA                                               ADD_TYPE
+   AREA                                             AREA_TYPE
+     STREET                                         VARCHAR2(5)
+     LOCALITY                                       VARCHAR2(5)
+   CITY                                             VARCHAR2(5)
+ PIN                                                NUMBER(6)
+
+SQL> SELECT object_name,object_type, status FROM user_objects WHERE object_type = 'TYPE';
+
+OBJECT_NAME          OBJECT_TYPE         STATUS
+-------------------- ------------------- -------
+ADD_TYPE             TYPE                VALID
+ADDRESS_TYPE         TYPE                VALID
+AREA_TYPE            TYPE                VALID
+
+
+SQL> DROP TYPE ADD_TYPE;
+DROP TYPE ADD_TYPE
+*
+ERROR at line 1:
+ORA-02303: cannot drop or replace a type with type or table dependents
+
+
+SQL> DROP TYPE ADDRESS_TYPE;
+
+Type dropped.
+
+SQL> SELECT object_name,object_type, status FROM user_objects WHERE object_type = 'TYPE';
+
+OBJECT_NAME          OBJECT_TYPE         STATUS
+-------------------- ------------------- -------
+ADD_TYPE             TYPE                VALID
+AREA_TYPE            TYPE                VALID
+
+SQL> DROP TYPE ADD_TYPE;
+
+Type dropped.
+
+SQL> DROP TYPE AREA_TYPE;
+
+Type dropped.
+
+SQL> SELECT object_name,object_type, status FROM user_objects WHERE object_type = 'TYPE';
+
+no rows selected
+
+
+
+
+
 
 
 
