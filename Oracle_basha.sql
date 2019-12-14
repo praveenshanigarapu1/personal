@@ -1671,18 +1671,18 @@ CREATE OBJECT WITH 2 LEVELS
 ---------------------------
 
 SQL> CREATE Or Replace TYPE AREA_Type AS OBJECT (
-  2  street VARCHAR2(5),
-  3  LOCALITY   VARCHAR2(5)
-  4  );
-  5  /
+  street VARCHAR2(5),
+  LOCALITY   VARCHAR2(5)
+  );
+  /
 
 Type created.
 
 SQL> CREATE Or Replace TYPE ADD_Type AS OBJECT (
-  2  area AREA_Type,
-  3  CITY   VARCHAR2(5)
-  4  );
-  5  /
+  area AREA_Type,
+  CITY   VARCHAR2(5)
+  );
+  /
 
 Type created.
 
@@ -1772,16 +1772,247 @@ SQL> SELECT object_name,object_type, status FROM user_objects WHERE object_type 
 
 no rows selected
 
+OBJECT TABLE
+------------
+
+SQL> CREATE Or Replace TYPE AREA_Type AS OBJECT (
+  2  street VARCHAR2(5),
+  3  LOCALITY   VARCHAR2(5)
+  4  );
+  5  /
+
+Type created.
+
+SQL>
+SQL> CREATE Or Replace TYPE ADD_Type AS OBJECT (
+  2  area AREA_Type,
+  3  CITY   VARCHAR2(5)
+  4  );
+  5  /
+
+Type created.
+
+SQL>
+SQL>
+SQL> CREATE Or Replace TYPE ADDRESS_Type AS OBJECT (
+  2  area ADD_Type,
+  3  PIN   NUMBER(6)
+  4  );
+  5  /
+
+Type created.
+
+SQL> DESC ADDRESS_Type
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ AREA                                               ADD_TYPE
+   AREA                                             AREA_TYPE
+     STREET                                         VARCHAR2(5)
+     LOCALITY                                       VARCHAR2(5)
+   CITY                                             VARCHAR2(5)
+ PIN                                                NUMBER(6)
+
+SQL> SET DESC DEPTH 5;
+SQL> DESC ADDRESS_Type
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ AREA                                               ADD_TYPE
+   AREA                                             AREA_TYPE
+     STREET                                         VARCHAR2(5)
+     LOCALITY                                       VARCHAR2(5)
+   CITY                                             VARCHAR2(5)
+ PIN                                                NUMBER(6)
+
+SQL> CREATE TABLE EMP_TYPE1(
+     EMPNO NUMBER(4),
+     ENAME VARCHAR(6),
+     ADDRESS AREA_TYPE,
+     SAL NUMBER(5)
+     );
+
+Table created.
+
+SQL> DESC EMP_TYPE1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(6)
+ ADDRESS                                            AREA_TYPE
+   STREET                                           VARCHAR2(5)
+   LOCALITY                                         VARCHAR2(5)
+ SAL                                                NUMBER(5)
+
+SQL> SQL> CREATE TABLE EMP_TYPE2(
+  2  EMPNO NUMBER(4),
+  3  ENAME VARCHAR(6),
+  4  ADDRESS ADD_Type,
+  5  SAL NUMBER(5)
+  6  );
+
+
+Table created.
+
+SQL>
+SQL> CREATE TABLE EMP_TYPE3(
+  EMPNO NUMBER(4),
+  ENAME VARCHAR(6),
+  ADDRESS ADDRESS_Type,
+  SAL NUMBER(5)
+  );
+
+Table created.
+
+SQL> DESC EMP_TYPE1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(6)
+ ADDRESS                                            AREA_TYPE
+   STREET                                           VARCHAR2(5)
+   LOCALITY                                         VARCHAR2(5)
+ SAL                                                NUMBER(5)
+
+SQL> DESC EMP_TYPE2
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(6)
+ ADDRESS                                            ADDRESS_TYPE
+   AREA                                             ADD_TYPE
+     AREA                                           AREA_TYPE
+       STREET                                       VARCHAR2(5)
+       LOCALITY                                     VARCHAR2(5)
+     CITY                                           VARCHAR2(5)
+   PIN                                              NUMBER(6)
+ SAL                                                NUMBER(5)
+
+SQL> DESC EMP_TYPE3
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(6)
+ ADDRESS                                            ADDRESS_TYPE
+   AREA                                             ADD_TYPE
+     AREA                                           AREA_TYPE
+       STREET                                       VARCHAR2(5)
+       LOCALITY                                     VARCHAR2(5)
+     CITY                                           VARCHAR2(5)
+   PIN                                              NUMBER(6)
+ SAL                                                NUMBER(5)
+INSERT INTO EMP_TYPE1 VALUES(1,'A',AREA_TYPE('S1','L1'), 100);
+INSERT INTO EMP_TYPE1 VALUES(2,'B',AREA_TYPE('S2','L2'),200 );
+INSERT INTO EMP_TYPE1 VALUES(3,'C',AREA_TYPE('S3','L3'),300 );
+INSERT INTO EMP_TYPE1 VALUES(4,'D',AREA_TYPE('S4','L4'),400 ); 
+INSERT INTO EMP_TYPE1 VALUES(5,'E',AREA_TYPE('S5','L5'),500 ); 
+INSERT INTO EMP_TYPE1 VALUES(6,'F',AREA_TYPE('S6','L6'),600 ); 
+
+INSERT INTO EMP_TYPE2 VALUES(1,'A',ADD_TYPE(AREA_TYPE('S1','L1'), 'C1'), 100);
+INSERT INTO EMP_TYPE2 VALUES(2,'B',ADD_TYPE(AREA_TYPE('S2','L2'), 'C2'),200 );
+INSERT INTO EMP_TYPE2 VALUES(3,'C',ADD_TYPE(AREA_TYPE('S3','L3'), 'C3'),300 );
+INSERT INTO EMP_TYPE2 VALUES(4,'D',ADD_TYPE(AREA_TYPE('S4','L4'), 'C4'),400 ); 
+INSERT INTO EMP_TYPE2 VALUES(5,'E',ADD_TYPE(AREA_TYPE('S5','L5'), 'C5'),500 ); 
+INSERT INTO EMP_TYPE2 VALUES(6,'F',ADD_TYPE(AREA_TYPE('S6','L6'), 'C6'),600 ); 
+
+COMMIT;
+
+INSERT INTO EMP_TYPE3 VALUES(1,'A',ADDRESS_Type(ADD_TYPE(AREA_TYPE('S1','L1'), 'C1'), 100), 112);
+INSERT INTO EMP_TYPE3 VALUES(2,'B',ADDRESS_Type(ADD_TYPE(AREA_TYPE('S2','L2'), 'C2'),200 ),112);
+INSERT INTO EMP_TYPE3 VALUES(3,'C',ADDRESS_Type(ADD_TYPE(AREA_TYPE('S3','L3'), 'C3'),300 ),112);
+INSERT INTO EMP_TYPE3 VALUES(4,'D',ADDRESS_Type(ADD_TYPE(AREA_TYPE('S4','L4'), 'C4'),400 ),112); 
+INSERT INTO EMP_TYPE3 VALUES(5,'E',ADDRESS_Type(ADD_TYPE(AREA_TYPE('S5','L5'), 'C5'),500 ),112); 
+INSERT INTO EMP_TYPE3 VALUES(6,'F',ADDRESS_Type(ADD_TYPE(AREA_TYPE('S6','L6'), 'C6'),600 ),112); 
+
+COMMIT;
+
+SQL> DESC EMP_TYPE1;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(6)
+ ADDRESS                                            AREA_TYPE
+   STREET                                           VARCHAR2(5)
+   LOCALITY                                         VARCHAR2(5)
+ SAL                                                NUMBER(5)
+
+SQL> COLUMN ADDRESS FORMAT A21;
+SQL> SELECT * FROM EMP_TYPE1;
+
+     EMPNO ENAME  ADDRESS(STREET, LOCAL        SAL
+---------- ------ --------------------- ----------
+         1 A      AREA_TYPE('S1', 'L1')        100
+         2 B      AREA_TYPE('S2', 'L2')        200
+         3 C      AREA_TYPE('S3', 'L3')        300
+         4 D      AREA_TYPE('S4', 'L4')        400
+         5 E      AREA_TYPE('S5', 'L5')        500
+         6 F      AREA_TYPE('S6', 'L6')        600
+         1 A      AREA_TYPE('S1', 'L1')        100
+         2 B      AREA_TYPE('S2', 'L2')        200
+         3 C      AREA_TYPE('S3', 'L3')        300
+         4 D      AREA_TYPE('S4', 'L4')        400
+         5 E      AREA_TYPE('S5', 'L5')        500
+
+     EMPNO ENAME  ADDRESS(STREET, LOCAL        SAL
+---------- ------ --------------------- ----------
+         6 F      AREA_TYPE('S6', 'L6')        600
+
+12 rows selected.
+
+SQL> DESC EMP_TYPE2;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(6)
+ ADDRESS                                            ADD_TYPE
+   AREA                                             AREA_TYPE
+     STREET                                         VARCHAR2(5)
+     LOCALITY                                       VARCHAR2(5)
+   CITY                                             VARCHAR2(5)
+ SAL                                                NUMBER(5)
+
+SQL> COLUMN ADDRESS FORMAT A41;
+SQL> SELECT * FROM EMP_TYPE2;
+
+     EMPNO ENAME  ADDRESS(AREA(STREET, LOCALITY), CITY)            SAL
+---------- ------ ----------------------------------------- ----------
+         1 A      ADD_TYPE(AREA_TYPE('S1', 'L1'), 'C1')            100
+         2 B      ADD_TYPE(AREA_TYPE('S2', 'L2'), 'C2')            200
+         3 C      ADD_TYPE(AREA_TYPE('S3', 'L3'), 'C3')            300
+         4 D      ADD_TYPE(AREA_TYPE('S4', 'L4'), 'C4')            400
+         5 E      ADD_TYPE(AREA_TYPE('S5', 'L5'), 'C5')            500
+         6 F      ADD_TYPE(AREA_TYPE('S6', 'L6'), 'C6')            600
+
+6 rows selected.
+
+ SQL> COLUMN ADDRESS FORMAT A61;
+SQL> DESC EMP_TYPE3;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(6)
+ ADDRESS                                            ADDRESS_TYPE
+   AREA                                             ADD_TYPE
+     AREA                                           AREA_TYPE
+       STREET                                       VARCHAR2(5)
+       LOCALITY                                     VARCHAR2(5)
+     CITY                                           VARCHAR2(5)
+   PIN                                              NUMBER(6)
+ SAL                                                NUMBER(5)
+
+SQL> SELECT * FROM EMP_TYPE3;
+
+     EMPNO ENAME  ADDRESS(AREA(AREA(STREET, LOCALITY), CITY), PIN)                     SAL
+---------- ------ ------------------------------------------------------------- ----------
+         1 A      ADDRESS_TYPE(ADD_TYPE(AREA_TYPE('S1', 'L1'), 'C1'), 100)             112
+         1 A      ADDRESS_TYPE(ADD_TYPE(AREA_TYPE('S1', 'L1'), 'C1'), 100)             112
+         2 B      ADDRESS_TYPE(ADD_TYPE(AREA_TYPE('S2', 'L2'), 'C2'), 200)             112
+         3 C      ADDRESS_TYPE(ADD_TYPE(AREA_TYPE('S3', 'L3'), 'C3'), 300)             112
+         4 D      ADDRESS_TYPE(ADD_TYPE(AREA_TYPE('S4', 'L4'), 'C4'), 400)             112
+         5 E      ADDRESS_TYPE(ADD_TYPE(AREA_TYPE('S5', 'L5'), 'C5'), 500)             112
+         6 F      ADDRESS_TYPE(ADD_TYPE(AREA_TYPE('S6', 'L6'), 'C6'), 600)             112
+
+7 rows selected.
 
 
 
 
 
-
-
-
-
- 
- 
- 
- 
