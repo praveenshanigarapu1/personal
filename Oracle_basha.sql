@@ -2173,5 +2173,114 @@ SQL> desc emp_nt;
    NAME                                             VARCHAR2(6)
    ROLE                                             NUMBER(5)
                                      
-                                     
-                                     
+  SQL> select projects from emp_nt;
+
+PROJECTS(NAME, ROLE)
+--------------------------------------------------------------------------------
+PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2))
+                                                     
+SELECT * FROM TABLE(select projects from emp_nt);
+                                                     
+SQL> select projects from emp_nt;
+
+PROJECTS(NAME, ROLE)
+--------------------------------------------------------------------------------
+PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2))
+
+SQL> SELECT * FROM TABLE(select projects from emp_nt);
+
+NAME         ROLE
+------ ----------
+NAME1           1
+NAME2           2
+
+SQL> SELECT NAME FROM TABLE(select projects from emp_nt);
+
+NAME
+------
+NAME1
+NAME2
+                                                     
+SQL> INSERT INTO TABLE(select projects from emp_nt WHERE EMPNO = 1) VALUES('PRVN', 3);
+
+1 row created.                                                     
+                                                     
+SQL> INSERT INTO TABLE(select projects from emp_nt WHERE EMPNO = 1) VALUES('PRVN', 3);
+
+1 row created.
+
+SQL> select projects from emp_nt WHERE EMPNO = 1
+  2  ;
+
+PROJECTS(NAME, ROLE)
+--------------------------------------------------------------------------------
+PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('
+PRVN', 3))
+
+
+SQL> SELECT * FROM TABLE(select projects from emp_nt);
+
+NAME         ROLE
+------ ----------
+NAME1           1
+NAME2           2
+PRVN            3
+
+SQL> SELECT NAME FROM TABLE(select projects from emp_nt);
+
+NAME
+------
+NAME1
+NAME2
+PRVN
+                                                     
+SQL> SET LIN 200
+SQL>  SELECT EMPNO, ENAME, PROJECTS FROM  emp_nt T1, TABLE(PROJECTS) T2;
+
+     EMPNO ENAME  PROJECTS(NAME, ROLE)
+---------- ------ ------------------------------------------------------------------------------------------
+         1 PRAVEE PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('PRVN', 3))
+         1 PRAVEE PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('PRVN', 3))
+         1 PRAVEE PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('PRVN', 3)) 
+                                                                                                 
+SQL>  SELECT EMPNO, ENAME, PROJECTS FROM  emp_nt T1, TABLE(T1.PROJECTS) T2;
+
+     EMPNO ENAME  PROJECTS(NAME, ROLE)
+---------- ------ ------------------------------------------------------------------------------------------
+         1 PRAVEE PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('PRVN', 3))
+         1 PRAVEE PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('PRVN', 3))
+         1 PRAVEE PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('PRVN', 3))                                                     
+                                                     
+                                                     
+    SELECT * FROM  emp_nt T1, TABLE(T1.PROJECTS) T2;                                                 
+     
+                                                                                                 
+SQL> COLUMN SELECTPROJECTSFROMEMP_NT FORMAT A60
+                                                                                                 
+SQL>  SELECT EMPNO, ENAME, (SELECT PROJECTS FROM EMP_NT) FROM  emp_nt T1, TABLE(PROJECTS) T2;
+
+     EMPNO ENAME
+---------- ------
+(SELECTPROJECTSFROMEMP_NT)(NAME, ROLE)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+         1 PRAVEE
+PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('PRVN', 3))
+
+         1 PRAVEE
+PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('PRVN', 3))
+
+         1 PRAVEE
+PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('PRVN', 3))                                                                                                
+                                                     
+ DELETE FROM TABLE(SELECT PROJECTS FROM EMP_NT WHERE EMPNO=1)
+ WHERE ROLE = 3                                                                               
+                                                     
+SQL>  UPDATE  TABLE(SELECT PROJECTS FROM EMP_NT WHERE EMPNO=1)  SET NAME = 'NAME11' WHERE ROLE = 1;
+
+1 row updated.                                                                         
+                                                     
+                                                     
+                                                     
+                                                     
+                                                     
+                                                     
