@@ -1037,6 +1037,198 @@ SQL> select * from ps1;
 
 14 rows selected.
 
+Indexes
+=======
+
+set lines 120 pages 500  feed 1 numwidth 5
+
+
+
+
+ EMPNO       NUMBER(4)
+ ENAME       VARCHAR2(10)
+ JOB         VARCHAR2(9)
+ MGR         NUMBER
+ HIREDATE    DATE
+ SAL         NUMBER
+ COMM        NUMBER
+
+
+CREATE TABLE emp_index(
+ EMPNO       NUMBER(4),
+ ENAME       VARCHAR2(10),
+ JOB         VARCHAR2(9),
+ SAL         NUMBER(7,2),
+ COMM        NUMBER(7,2)
+ );           
+
+
+SQL> CREATE TABLE emp_index( EMPNO NUMBER(4), ENAME  VARCHAR2(10), JOB  VARCHAR2(9), SAL  NUMBER(7,2), COMM NUMBER(7,2) );
+
+Table created.
+
+SQL> INSERT INTO emp_index SELECT empno, ename, job, sal, comm  From emp;
+
+14 rows created.
+
+
+index segment 
+
+CREATE INDEX i1 on emp_index(empno);
+
+SQL> CREATE INDEX i1 on emp_index(empno);
+
+Index created.
+
+(empno)data copied as it into index segment 
+
+SQL> DROP index i1;
+
+Index dropped.
+
+SQL> CREATE INDEX i1 on emp_index(empno ASC);
+
+Index created.
+
+(empno)data copied as it into index segment in ASC order
+
+SQL> DROP index i1;
+
+Index dropped.
+
+
+SQL> CREATE INDEX i1 on emp_index(empno DESC);
+
+Index created.
+(empno)data copied as it into index segment in DESC order
+
+SQL> CREATE INDEX i2 on emp_index(empno);
+CREATE INDEX i2 on emp_index(empno)
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+SQL> CREATE UNIQUE INDEX i3 on emp_index(job);
+CREATE UNIQUE INDEX i3 on emp_index(job)
+                          *
+ERROR at line 1:
+ORA-01452: cannot CREATE UNIQUE INDEX; duplicate keys found
+
+ CREATE UNIQUE INDEX i3 on emp_index(ename);
+ 
+ 
+SQL>  CREATE UNIQUE INDEX i3 on emp_index(ename);
+
+Index created.
+
+SQL> SELECT index_name, index_type, table_type, uniqueness, status From user_indexes where table_name = 'EMP_INDEX';
+
+INDEX_NAME                     INDEX_TYPE                  TABLE_TYPE  UNIQUENES STATUS
+------------------------------ --------------------------- ----------- --------- --------
+I1                             FUNCTION-BASED NORMAL       TABLE       NONUNIQUE VALID
+I2                             NORMAL                      TABLE       NONUNIQUE VALID
+I3                             NORMAL                      TABLE       UNIQUE    VALID
+
+3 rows selected.
+
+SQL> SELECT table_name from DICT where table_name like 'USER_%INDEX%' OR table_name like 'USER_%IND%' ;
+
+TABLE_NAME
+------------------------------
+USER_ADDM_FINDINGS
+USER_ADVISOR_FINDINGS
+USER_INDEXES
+USER_INDEXTYPES
+USER_INDEXTYPE_ARRAYTYPES
+USER_INDEXTYPE_COMMENTS
+USER_INDEXTYPE_OPERATORS
+USER_IND_COLUMNS
+USER_IND_EXPRESSIONS
+USER_IND_PARTITIONS
+USER_IND_PENDING_STATS
+USER_IND_STATISTICS
+USER_IND_SUBPARTITIONS
+USER_JOIN_IND_COLUMNS
+USER_OPBINDINGS
+USER_PART_INDEXES
+USER_SQLSET_BINDS
+USER_SQLTUNE_BINDS
+USER_XML_INDEXES
+
+19 rows selected.
+
+
+desc COLUMN_LENGTH, CHAR_LENGTH,
+
+SQL> SELECT INDEX_NAME, TABLE_NAME,  COLUMN_POSITION,  DESCEND, COLUMN_LENGTH, CHAR_LENGTH FROM USER_IND_COLUMNS
+     WHERE TABLE_NAME = 'EMP_INDEX';
+
+INDEX_NAME                     TABLE_NAME                     COLUMN_POSITION DESC COLUMN_LENGTH CHAR_LENGTH
+------------------------------ ------------------------------ --------------- ---- ------------- -----------
+I1                             EMP_INDEX                                    1 DESC            34           0
+I2                             EMP_INDEX                                    1 ASC             22           0
+I3                             EMP_INDEX                                    1 ASC             10          10
+
+
+GLOBAL index -- on normal table also;
+
+SQL> CREATE  INDEX i4 on emp_index(job) GLOBAL;
+
+Index created.
+
+SQL> SELECT INDEX_NAME, TABLE_NAME,  COLUMN_POSITION,  DESCEND, COLUMN_LENGTH, CHAR_LENGTH FROM USER_IND_COLUMNS WHERE TABLE_NAME = 'EMP_INDEX';
+
+INDEX_NAME                     TABLE_NAME                     COLUMN_POSITION DESC COLUMN_LENGTH CHAR_LENGTH
+------------------------------ ------------------------------ --------------- ---- ------------- -----------
+I1                             EMP_INDEX                                    1 DESC            34           0
+I2                             EMP_INDEX                                    1 ASC             22           0
+I3                             EMP_INDEX                                    1 ASC             10          10
+I4                             EMP_INDEX                                    1 ASC              9           9
+
+4 rows selected.
+
+Global by default taking ASC order;
+
+
+SQL> CREATE  INDEX i4 on emp_index(job) LOCAL;
+CREATE  INDEX i4 on emp_index(job) LOCAL
+*
+ERROR at line 1:
+ORA-00439: feature not enabled: Partitioning
+
+
+SQL> CREATE  INDEX ic1 on emp_index(empno, ename, job);
+
+Index created.
+
+SQL> SELECT INDEX_NAME, TABLE_NAME,  COLUMN_POSITION,  DESCEND, COLUMN_LENGTH, CHAR_LENGTH FROM USER_IND_COLUMNS WHERE TABLE_NAME = 'EMP_INDEX';
+
+INDEX_NAME                     TABLE_NAME                     COLUMN_POSITION DESC COLUMN_LENGTH CHAR_LENGTH
+------------------------------ ------------------------------ --------------- ---- ------------- -----------
+I1                             EMP_INDEX                                    1 DESC            34           0
+I2                             EMP_INDEX                                    1 ASC             22           0
+I3                             EMP_INDEX                                    1 ASC             10          10
+I4                             EMP_INDEX                                    1 ASC              9           9
+
+IC1                            EMP_INDEX                                    1 ASC             22           0
+IC1                            EMP_INDEX                                    2 ASC             10          10
+IC1                            EMP_INDEX                                    3 ASC              9           9
+
+7 rows selected.
+
+CREATE  INDEX ic1 on emp_index(empno DESC, ename DESC, job DESC);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
