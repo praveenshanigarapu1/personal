@@ -1365,20 +1365,142 @@ SQL> CREATE TABLE emp_iot(
                 *
 ERROR at line 7:
 ORA-25175: no PRIMARY KEY constraint found
+  
+                                    with unique
+SQL> CREATE TABLE emp_iot(
+  EMPNO       NUMBER(4) unique,
+  ENAME       VARCHAR2(10),
+  JOB         VARCHAR2(9),
+  SAL         NUMBER(7,2),
+  COMM        NUMBER(7,2)
+  ) ORGANIZATION INDEX;
+ ) ORGANIZATION INDEX
+                *
+ERROR at line 7:
+ORA-25175: no PRIMARY KEY constraint found
+                                          
+ SQL> CREATE TABLE emp_iot(
+   EMPNO       NUMBER(4) Primary key,
+   ENAME       VARCHAR2(10),
+   JOB         VARCHAR2(9),
+   SAL         NUMBER(7,2),
+   COMM        NUMBER(7,2)
+   ) ORGANIZATION INDEX;
 
+Table created.
+ 
+ SQL> CREATE TABLE emp_normal(
+    EMPNO       NUMBER(4) ,
+    ENAME       VARCHAR2(10),
+    JOB         VARCHAR2(9),
+    SAL         NUMBER(7,2),
+    COMM        NUMBER(7,2)
+    ) ;
+
+Table created.
                                           
+INSERT INTO emp_index SELECT empno, ename, job, sal, comm  From emp;                                          
+SQL> commit;
+
+Commit complete.                                          
                                           
-                                          
-                                          
-                                          
-                                          
-                                          
-                                          
-                                          
-                                          
-                                          
+insert into emp_iot (empno) values(2);                                          
+insert into emp_iot (empno) values(1);                                        
+insert into emp_iot (empno) values(4);                                        
+insert into emp_iot (empno) values(5);                                        
+insert into emp_iot (empno) values(6);                                        
+insert into emp_iot (empno) values(7);
+insert into emp_iot (empno) values(9);
+insert into emp_iot (empno) values(8);
+
+
+     EMPNO ENAME      JOB              SAL       COMM
+---------- ---------- --------- ---------- ----------
+         1
+         4
+         5
+         6
+         7
+         8
+         9
+
+Its in sorted order
+-------------------
+
+ont update the data rearranges automatically
+
+IOT FLASHBACK
+------------
+ flashback table EMP_IOT TO BEFORE DROP;
+ 
+ SQL> flashback table EMP_IOT TO BEFORE DROP;
+flashback table EMP_IOT TO BEFORE DROP
+*
+ERROR at line 1:
+ORA-38305: object not in RECYCLE BIN
+
+
+SQL> SHO RECYCLEBIN;
+SQL> ;
+  1* flashback table EMP_IOT TO BEFORE DROP
+SQL> SELECT * FROM TAB WHERE TNAME='EMP_IOT';
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+EMP_IOT                        TABLE
+
+1 row selected.
+
+SELECT * FROM USER_TABLES;
+SQL> SELECT TABLE_NAME, IOT_NAME, IOT_TYPE FROM USER_TABLES WHERE TABLE_NAME = 'EMP_IOT';
+
+TABLE_NAME   IOT_NAME                       IOT_TYPE
+------------ ------------------------------ ------------
+EMP_IOT                                     IOT
+
+1 row selected.
+
+SQL> DESC USER_OBJECTS;
+ Name                                                              Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ OBJECT_NAME                                                                VARCHAR2(128)
+ SUBOBJECT_NAME                                                             VARCHAR2(30)
+ OBJECT_ID                                                                  NUMBER
+ DATA_OBJECT_ID                                                             NUMBER
+ OBJECT_TYPE                                                                VARCHAR2(19)
+ CREATED                                                                    DATE
+ LAST_DDL_TIME                                                              DATE
+ TIMESTAMP                                                                  VARCHAR2(19)
+ STATUS                                                                     VARCHAR2(7)
+ TEMPORARY                                                                  VARCHAR2(1)
+ GENERATED                                                                  VARCHAR2(1)
+ SECONDARY                                                                  VARCHAR2(1)
+ NAMESPACE                                                                  NUMBER
+ EDITION_NAME                                                               VARCHAR2(30)
+
+
+COLUMN OBJECT_NAME FORMAT A50
+COLUMN OBJECT_TYPE FORMAT A50
+
+OBJECT_NAME                                        OBJECT_TYPE
+-------------------------------------------------- --------------------------------------------------
+EMP_IOT                                            TABLE
+
+1 row selected.
 
 
 
 
 
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
