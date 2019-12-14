@@ -1216,24 +1216,167 @@ IC1                            EMP_INDEX                                    3 AS
 
 7 rows selected.
 
-CREATE  INDEX ic1 on emp_index(empno DESC, ename DESC, job DESC);
+SQL> drop index ic1;
+
+Index dropped.
+
+SQL> CREATE  INDEX ic1 on emp_index(empno DESC, ename DESC, job DESC);
+
+Index created.
+
+SQL> SELECT INDEX_NAME, TABLE_NAME,  COLUMN_POSITION,  DESCEND, COLUMN_LENGTH, CHAR_LENGTH FROM USER_IND_COLUMNS WHERE TABLE_NAME = 'EMP_INDEX';
+
+INDEX_NAME                     TABLE_NAME                     COLUMN_POSITION DESC COLUMN_LENGTH CHAR_LENGTH
+------------------------------ ------------------------------ --------------- ---- ------------- -----------
+I1                             EMP_INDEX                                    1 DESC            34           0
+I2                             EMP_INDEX                                    1 ASC             22           0
+I3                             EMP_INDEX                                    1 ASC             10          10
+I4                             EMP_INDEX                                    1 ASC              9           9
+IC1                            EMP_INDEX                                    1 DESC            34           0
+IC1                            EMP_INDEX                                    2 DESC            16           0
+IC1                            EMP_INDEX                                    3 DESC            15           0
+
+7 rows selected.
+
+SQL> COLUMN INDEX_NAME FORMAT A10
+SQL> COLUMN INDEX_TYPE FORMAT A30
+SQL> COLUMN TABLE_NAME FORMAT A12
+SQL> COLUMN COLUMN_NAME FORMAT A15
+SQL> SET NUMWIDTH 10
+SQL>
+
+SQL> SELECT INDEX_NAME, TABLE_NAME,  COLUMN_POSITION,  DESCEND, COLUMN_LENGTH, CHAR_LENGTH 
+      FROM USER_IND_COLUMNS WHERE TABLE_NAME = 'EMP_INDEX';
+INDEX_NAME TABLE_NAME   COLUMN_POSITION DESC COLUMN_LENGTH CHAR_LENGTH
+---------- ------------ --------------- ---- ------------- -----------
+I1         EMP_INDEX                  1 DESC            34           0
+I2         EMP_INDEX                  1 ASC             22           0
+I3         EMP_INDEX                  1 ASC             10          10
+I4         EMP_INDEX                  1 ASC              9           9
+IC1        EMP_INDEX                  1 DESC            34           0
+IC1        EMP_INDEX                  2 DESC            16           0
+IC1        EMP_INDEX                  3 DESC            15           0
+
+7 rows selected.
+
+SQL>
+SELECT INDEX_NAME, index_type, TABLE_NAME,  COLUMN_POSITION,  DESCEND, COLUMN_LENGTH, CHAR_LENGTH     
+FROM USER_INDEXES ui join USER_IND_COLUMNS uic using(TABLE_NAME, INDEX_NAME) 
+where TABLE_NAME ='EMP_INDEX';
+
+INDEX_NAME INDEX_TYPE                     TABLE_NAME   COLUMN_POSITION DESC COLUMN_LENGTH CHAR_LENGTH
+---------- ------------------------------ ------------ --------------- ---- ------------- -----------
+I1         FUNCTION-BASED NORMAL          EMP_INDEX                  1 DESC            34           0
+I2         NORMAL                         EMP_INDEX                  1 ASC             22           0
+I3         NORMAL                         EMP_INDEX                  1 ASC             10          10
+I4         NORMAL                         EMP_INDEX                  1 ASC              9           9
+IC1        FUNCTION-BASED NORMAL          EMP_INDEX                  1 DESC            34           0
+IC1        FUNCTION-BASED NORMAL          EMP_INDEX                  2 DESC            16           0
+IC1        FUNCTION-BASED NORMAL          EMP_INDEX                  3 DESC            15           0
+
+7 rows selected.
 
 
+Functional index
+----------------
+SQL> CREATE  INDEX if5 on emp_index(UPPER(empno));
+
+Index created.
+
+ SQL> CREATE  INDEX if6 on emp_index(sal*2);
+
+Index created.
+SQL> CREATE  INDEX if7 on emp_index(sal+comm);
+
+Index created.
+
+ SQL> SELECT INDEX_NAME, index_type, TABLE_NAME, COLUMN_NAME, COLUMN_POSITION,  DESCEND, COLUMN_LENGTH, CHAR_LENGTH    
+FROM USER_INDEXES ui join USER_IND_COLUMNS uic using(TABLE_NAME, INDEX_NAME) where TABLE_NAME ='EMP_INDEX';
+
+INDEX_NAME INDEX_TYPE                     TABLE_NAME   COLUMN_POSITION DESC COLUMN_LENGTH CHAR_LENGTH
+---------- ------------------------------ ------------ --------------- ---- ------------- -----------
+I1         FUNCTION-BASED NORMAL          EMP_INDEX                  1 DESC            34           0
+I2         NORMAL                         EMP_INDEX                  1 ASC             22           0
+I3         NORMAL                         EMP_INDEX                  1 ASC             10          10
+I4         NORMAL                         EMP_INDEX                  1 ASC              9           9
+IC1        FUNCTION-BASED NORMAL          EMP_INDEX                  1 DESC            34           0
+IC1        FUNCTION-BASED NORMAL          EMP_INDEX                  2 DESC            16           0
+IC1        FUNCTION-BASED NORMAL          EMP_INDEX                  3 DESC            15           0
+IF5        FUNCTION-BASED NORMAL          EMP_INDEX                  1 ASC             40          40
+IF6        FUNCTION-BASED NORMAL          EMP_INDEX                  1 ASC             22           0
+IF7        FUNCTION-BASED NORMAL          EMP_INDEX                  1 ASC             22           0
 
 
+Rever ky indedx
+----------------
+CREATE  INDEX ir8 on emp_index(sal+comm);                                          
+INDEX_NAME INDEX_TYPE                     TABLE_NAME   COLUMN_NAME     COLUMN_POSITION DESC COLUMN_LENGTH CHAR_LENGTH
+---------- ------------------------------ ------------ --------------- --------------- ---- ------------- -----------
+I1         FUNCTION-BASED NORMAL          EMP_INDEX    SYS_NC00006$                  1 DESC            34           0
+I2         NORMAL                         EMP_INDEX    EMPNO                         1 ASC             22           0
+I3         NORMAL                         EMP_INDEX    ENAME                         1 ASC             10          10
+I4         NORMAL                         EMP_INDEX    JOB                           1 ASC              9           9
+IF5        FUNCTION-BASED NORMAL          EMP_INDEX    SYS_NC00007$                  1 ASC             40          40
+IF6        FUNCTION-BASED NORMAL          EMP_INDEX    SYS_NC00008$                  1 ASC             22           0
+IF7        FUNCTION-BASED NORMAL          EMP_INDEX    SYS_NC00009$                  1 ASC             22           0
+
+7 rows selected.
+
+SQL> drop index i3;
+
+Index dropped.
+
+SQL> CREATE  INDEX ir8 on emp_index(ename) REVERSE;
+
+Index created.
 
 
+SQL> SELECT INDEX_NAME, index_type, TABLE_NAME, COLUMN_NAME, COLUMN_POSITION,  DESCEND, COLUMN_LENGTH, CHAR_LENGTH  
+     FROM USER_INDEXES ui join USER_IND_COLUMNS uic using(TABLE_NAME, INDEX_NAME) where TABLE_NAME ='EMP_INDEX';
 
+INDEX_NAME INDEX_TYPE                     TABLE_NAME   COLUMN_NAME     COLUMN_POSITION DESC COLUMN_LENGTH CHAR_LENGTH
+---------- ------------------------------ ------------ --------------- --------------- ---- ------------- -----------
+I1         FUNCTION-BASED NORMAL          EMP_INDEX    SYS_NC00006$                  1 DESC            34           0
+I2         NORMAL                         EMP_INDEX    EMPNO                         1 ASC             22           0
+IR8        NORMAL/REV                     EMP_INDEX    ENAME                         1 ASC             10          10
+I4         NORMAL                         EMP_INDEX    JOB                           1 ASC              9           9
+IF5        FUNCTION-BASED NORMAL          EMP_INDEX    SYS_NC00007$                  1 ASC             40          40
+IF6        FUNCTION-BASED NORMAL          EMP_INDEX    SYS_NC00008$                  1 ASC             22           0
+IF7        FUNCTION-BASED NORMAL          EMP_INDEX    SYS_NC00009$                  1 ASC             22           0
 
+7 rows selected.
+                                          
+ INDEX ORGANIZED TABLES(IOT)
+ ---------------------------
 
+SQL> drop table emp_index purge;
 
+Table dropped.
+Purge removes from recycle bin also.                                          
+                                          
+SQL> CREATE TABLE emp_iot(
+  2   EMPNO       NUMBER(4),
+  3   ENAME       VARCHAR2(10),
+  4   JOB         VARCHAR2(9),
+  5   SAL         NUMBER(7,2),
+  6   COMM        NUMBER(7,2)
+  7   ) ORGANIZATION INDEX;
+ ) ORGANIZATION INDEX
+                *
+ERROR at line 7:
+ORA-25175: no PRIMARY KEY constraint found
 
-
-
-
-
-
-
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
 
 
 
