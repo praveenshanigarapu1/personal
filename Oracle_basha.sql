@@ -1489,9 +1489,83 @@ EMP_IOT                                            TABLE
 1 row selected.
 
 
+OBJECT TYPES
+=============
+
+SQL> DESC USER_TYPES
+ Name                                                              Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ TYPE_NAME                                                         NOT NULL VARCHAR2(30)
+ TYPE_OID                                                          NOT NULL RAW(16)
+ TYPECODE                                                                   VARCHAR2(30)
+ ATTRIBUTES                                                                 NUMBER
+ METHODS                                                                    NUMBER
+ PREDEFINED                                                                 VARCHAR2(3)
+ INCOMPLETE                                                                 VARCHAR2(3)
+ FINAL                                                                      VARCHAR2(3)
+ INSTANTIABLE                                                               VARCHAR2(3)
+ SUPERTYPE_OWNER                                                            VARCHAR2(30)
+ SUPERTYPE_NAME                                                             VARCHAR2(30)
+ LOCAL_ATTRIBUTES                                                           NUMBER
+ LOCAL_METHODS                                                              NUMBER
+ TYPEID                                                                     RAW(16)
+
+SQL> SELECT TYPE_NAME,  ATTRIBUTES, INSTANTIABLE, METHODS FROM USER_TYPES;
+
+no rows selected
+
+SQL>
 
 
+CREATE Or Replace TYPE Type_Address AS OBJECT (
+hno number(3),
+street VARCHAR2(5),
+city   VARCHAR2(5)
+);
+ /
 
+ CREATE Or Replace TYPE Type_Address AS OBJECT (
+hno number(3),
+street VARCHAR2(5),
+city   VARCHAR2(5)
+);
+ /
+ 
+ COLUMN TYPE_NAME FORMAT A20;
+ COLUMN TYPECODE FORMAT A10;
+ COLUMN INDEX_NAME FORMAT A10;
+ COLUMN INDEX_NAME FORMAT A10;
+ 
+Type created.
+
+SQL> SELECT TYPE_NAME, TYPECODE,  ATTRIBUTES, INSTANTIABLE, METHODS FROM USER_TYPES;
+
+TYPE_NAME            TYPECODE   ATTRIBUTES INS    METHODS
+-------------------- ---------- ---------- --- ----------
+TYPE_ADDRESS         OBJECT              3 YES          0
+
+COLUMN object_name FORMAT A20;
+
+
+SQL> SELECT object_name,object_type, status FROM user_objects WHERE object_type = 'TYPE';
+
+OBJECT_NAME          OBJECT_TYPE         STATUS
+-------------------- ------------------- -------
+TYPE_ADDRESS         TYPE                VALID
+
+
+SQL> DESC TYPE_ADDRESS;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ HNO                                                NUMBER(3)
+ STREET                                             VARCHAR2(5)
+ CITY                                               VARCHAR2(5)
+
+SQL>  INSERT INTO TYPE_ADDRESS (HNO, STREE, CITY) VALUES(1, 'A', 'C');
+ INSERT INTO TYPE_ADDRESS (HNO, STREE, CITY) VALUES(1, 'A', 'C')
+             *
+ERROR at line 1:
+ORA-04044: procedure, function, package, or type is not allowed here
 
 
 
