@@ -789,3 +789,261 @@ SQL>  SELECT SS3.NEXTVAL, SS3.NEXTVAL FROM DUAL;
          
   IF WE DROP THEN WE LOSE ALL GRANT PREVILLAGES, SO WE REGRANT ALL PRIVILAGES.       
 
+SYNONYMS
+========
+SQL> DESC USER_SYNONYMS
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SYNONYM_NAME                              NOT NULL VARCHAR2(30)
+ TABLE_OWNER                                        VARCHAR2(30)
+ TABLE_NAME                                NOT NULL VARCHAR2(30)
+ DB_LINK                                            VARCHAR2(128)
+ 
+ 
+
+CREATE PRIVATE STNONYM SN1 FOR emp;
+
+SQL> CREATE PRIVATE SYNONYM SN1 FOR emp;
+CREATE PRIVATE SYNONYM SN1 FOR emp
+               *
+ERROR at line 1:
+ORA-00905: missing keyword
+
+SQL> CREATE  SYNONYM PN1 FOR emp;
+
+Synonym created.
+
+SQL> DESC PN1;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER
+ ENAME                                              VARCHAR2(10)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER
+ HIREDATE                                           DATE
+ SAL                                                NUMBER
+ COMM                                               NUMBER
+ DEPTNO                                             NUMBER(2)
+
+SELECT * FROM PN1;
+
+SQL> SELECT * FROM PN1;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
+
+14 rows selected.
+
+CREATE  SYNONYM SN1 FOR copy_emp;
+
+
+SYNONYM_NAME                   TABLE_NAME                     TABLE_OWNER
+------------------------------ ------------------------------ ------------------------------
+PN1                            EMP                            PRVN
+SN1                            COPY_EMP                       PRVN
+
+
+SQL> CREATE  OR REPLACE SYNONYM SN1 FOR copy_emp;
+
+Synonym created.
+
+
+SQL> RENAME SN1 TO SN2
+
+
+SQL> SELECT SYNONYM_NAME, TABLE_NAME, TABLE_OWNER FROM  USER_SYNONYMS;
+
+SYNONYM_NAME                   TABLE_NAME                     TABLE_OWNER
+------------------------------ ------------------------------ ------------------------------
+PN1                            EMP                            PRVN
+SN2                            COPY_EMP                       PRVN
+
+TRUNCATE SN2;
+
+SQL> TRUNCATE SN2;
+TRUNCATE SN2
+           *
+ERROR at line 1:
+ORA-03290: Invalid truncate command - missing CLUSTER or TABLE keyword
+
+SQL> COMMENT ON SYNONYM SN2 IS 'COMMENT ADDED';
+COMMENT ON SYNONYM SN2 IS 'COMMENT ADDED'
+           *
+ERROR at line 1:
+ORA-32594: invalid object category for COMMENT command
+
+ COMMENT ON TABLE SN2 IS 'COMMENT ADDED';
+
+
+SQL>  COMMENT ON TABLE SN2 IS 'COMMENT ADDED';
+
+Comment created.
+
+SQL> SELECT * FROM   USER_TAB_COMMENTS WHERE table_name ='copy_emp';
+
+no rows selected
+
+SQL> SELECT * FROM   USER_TAB_COMMENTS WHERE table_name ='COPY_EMP';
+
+TABLE_NAME                     TABLE_TYPE
+------------------------------ -----------
+COMMENTS
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+COPY_EMP                       TABLE
+COMMENT ADDED
+
+SQL> GRANT SELECT ON SN2 TO U1;
+
+Grant succeeded.
+
+
+SQL> DROP SYNONYM SN2;
+
+Synonym dropped.
+
+PUBLIC SYNONYMS
+----------------
+
+
+SQL> CREATE USER SH IDENTIFIED BY SH;
+
+User created.
+
+GRANT CONNECT, RESOURCE, DBA TO books_admin;
+
+ GRANT CONNECT TO SH;
+
+Warning: You are no longer connected to ORACLE.
+SQL>  GRANT CONNECT TO SH;
+SP2-0640: Not connected
+SQL> CONN prvn/prvn1
+Connected.
+SQL>  GRANT CONNECT TO SH;
+
+Grant succeeded.
+
+
+SQL> CREATE OR REPLACE PUBLIC SYNONYM ps1 FOR copy_emp;
+CREATE OR REPLACE PUBLIC SYNONYM ps1 FOR copy_emp
+*
+ERROR at line 1:
+ORA-01031: insufficient privileges
+
+SQL> CONN prvn/prvn1
+SQL> GRANT CREATE PUBLIC SYNONYM TO SH;
+
+Grant succeeded.
+
+SQL> CONN SH/SH;
+Connected.
+SQL> CREATE OR REPLACE PUBLIC SYNONYM ps1 FOR copy_emp;
+
+Synonym created.
+
+SQL> CONN prvn/prvn1
+
+
+SQL> REVOKE CREATE PUBLIC SYNONYM FROM SH;
+
+Revoke succeeded.
+
+SQL> CONN SH/SH
+Connected.
+SQL> CREATE OR REPLACE PUBLIC SYNONYM ps1 FOR copy_emp;
+CREATE OR REPLACE PUBLIC SYNONYM ps1 FOR copy_emp
+*
+ERROR at line 1:
+ORA-01031: insufficient privileges
+
+SQL> CONN prvn/prvn1
+
+SQL> CONN prvn/prvn1
+Connected.
+SQL> GRANT DBA TO SH;
+
+Grant succeeded.
+
+SQL> CREATE OR REPLACE PUBLIC SYNONYM ps1 FOR copy_emp;
+
+Synonym created.
+SQL> select * FROM ALL_USERS;
+
+USERNAME                          USER_ID CREATED
+------------------------------ ---------- ---------
+XS$NULL                        2147483638 29-MAY-14
+SH                                     50 14-DEC-19
+U1                                     49 13-DEC-19
+PRVN                                   48 02-APR-17
+APEX_040000                            47 29-MAY-14
+APEX_PUBLIC_USER                       45 29-MAY-14
+FLOWS_FILES                            44 29-MAY-14
+HR                                     43 29-MAY-14
+MDSYS                                  42 29-MAY-14
+ANONYMOUS                              35 29-MAY-14
+XDB                                    34 29-MAY-14
+CTXSYS                                 32 29-MAY-14
+APPQOSSYS                              30 29-MAY-14
+DBSNMP                                 29 29-MAY-14
+ORACLE_OCM                             21 29-MAY-14
+DIP                                    14 29-MAY-14
+OUTLN                                   9 29-MAY-14
+SYSTEM                                  5 29-MAY-14
+SYS                                     0 29-MAY-14
+
+19 rows selected.
+
+SQL> CONN prvn/prvn1
+Connected.
+SQL> GRANT SELECT ON PS1 TO PUBLIC;
+
+Grant succeeded.
+
+SQL> create user u2 identified by u2;
+
+User created.
+
+SQL> select * from ps1;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
+
+14 rows selected.
+
+
+
+
+
+
+
+
+
+
+
