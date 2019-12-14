@@ -2013,6 +2013,165 @@ SQL> SELECT * FROM EMP_TYPE3;
 7 rows selected.
 
 
+SQL> SELECT EMPNO, ENAME, SAL, ADDRESS FROM EMP_TYPE1;
 
+     EMPNO ENAME         SAL ADDRESS(STREET, LOCAL
+---------- ------ ---------- ---------------------
+         1 A             100 AREA_TYPE('S1', 'L1')
+         2 B             200 AREA_TYPE('S2', 'L2')
+         3 C             300 AREA_TYPE('S3', 'L3')
+         4 D             400 AREA_TYPE('S4', 'L4')
+         5 E             500 AREA_TYPE('S5', 'L5')
+         6 F             600 AREA_TYPE('S6', 'L6')
+         1 A             100 AREA_TYPE('S1', 'L1')
+         2 B             200 AREA_TYPE('S2', 'L2')
+         3 C             300 AREA_TYPE('S3', 'L3')
+         4 D             400 AREA_TYPE('S4', 'L4')
+         5 E             500 AREA_TYPE('S5', 'L5')
 
+     EMPNO ENAME         SAL ADDRESS(STREET, LOCAL
+---------- ------ ---------- ---------------------
+         6 F             600 AREA_TYPE('S6', 'L6')
 
+SQL> SELECT EMPNO, ENAME, SAL, T1.ADDRESS.STREET FROM EMP_TYPE1 T1;
+
+     EMPNO ENAME         SAL ADDRE
+---------- ------ ---------- -----
+         1 A             100 S1
+         2 B             200 S2
+         3 C             300 S3
+         4 D             400 S4
+         5 E             500 S5
+         6 F             600 S6
+         1 A             100 S1
+         2 B             200 S2
+         3 C             300 S3
+         4 D             400 S4
+         5 E             500 S5
+         6 F             600 S6
+
+12 rows selected.
+
+SQL> SELECT EMPNO, ENAME, SAL, ADDRESS.STREET FROM EMP_TYPE1 T1;
+SELECT EMPNO, ENAME, SAL, ADDRESS.STREET FROM EMP_TYPE1 T1
+                          *
+ERROR at line 1:
+ORA-00904: "ADDRESS"."STREET": invalid identifier
+
+                                     
+   SELECT EMPNO, ENAME, SAL, T1.ADDRESS.STREET FROM EMP_TYPE1 T1;
+T1 - ALIAS NAME MANDATORY TO ACCESS OBJECT VALUES
+ADDRESS - COLUMN NAME WE NEED TO SPECIFY, BUT NOT OBJECT TYPE                                     
+                                     
+SQL> SELECT EMPNO, ENAME, SAL, T2.ADDRESS.AREA.STREET FROM EMP_TYPE2 T2;
+
+     EMPNO ENAME         SAL ADDRE
+---------- ------ ---------- -----
+         1 A             100 S1
+         2 B             200 S2
+         3 C             300 S3
+         4 D             400 S4
+         5 E             500 S5
+         6 F             600 S6
+
+6 rows selected.                                     
+                                     
+  SQL> DESC EMP_TYPE3;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ EMPNO                                                          NUMBER(4)
+ ENAME                                                          VARCHAR2(6)
+ ADDRESS                                                        ADDRESS_TYPE
+   AREA                                                         ADD_TYPE
+     AREA                                                       AREA_TYPE
+       STREET                                                   VARCHAR2(5)
+       LOCALITY                                                 VARCHAR2(5)
+     CITY                                                       VARCHAR2(5)
+   PIN                                                          NUMBER(6)
+ SAL                                                            NUMBER(5)
+
+SQL> SELECT EMPNO, ENAME, SAL, T3.ADDRESS.AREA.AREA.STREET FROM EMP_TYPE3 T3;
+
+     EMPNO ENAME         SAL ADDRE
+---------- ------ ---------- -----
+         1 A             112 S1
+         1 A             112 S1
+         2 B             112 S2
+         3 C             112 S3
+         4 D             112 S4
+         5 E             112 S5
+         6 F             112 S6
+
+7 rows selected.
+                                     
+ SQL> SELECT EMPNO, ENAME, SAL, T3.ADDRESS.AREA.AREA.STREET AS STREET FROM EMP_TYPE3 T3 WHERE T3.ADDRESS.AREA.AREA.STREET = 'S3';
+
+     EMPNO ENAME         SAL STREE
+---------- ------ ---------- -----
+         3 C             112 S3
+                                    
+UPDATE SET T3.ADDRESS.AREA.AREA.STREET = 'S311'  FROM EMP_TYPE3 T3 WHERE T3.ADDRESS.AREA.AREA.STREET = 'S3'                                   
+                                     
+ SQL> UPDATE EMP_TYPE3 T3 SET T3.ADDRESS.AREA.AREA.STREET = 'S311'  WHERE T3.ADDRESS.AREA.AREA.STREET = 'S3' ;
+
+1 row updated.
+
+SQL> SELECT EMPNO, ENAME, SAL, T3.ADDRESS.AREA.AREA.STREET AS STREET FROM EMP_TYPE3 T3 WHERE T3.ADDRESS.AREA.AREA.STREET = 'S3';
+
+no rows selected
+
+SQL> SELECT EMPNO, ENAME, SAL, T3.ADDRESS.AREA.AREA.STREET AS STREET FROM EMP_TYPE3 T3 WHERE T3.ADDRESS.AREA.AREA.STREET = 'S311';
+
+     EMPNO ENAME         SAL STREE
+---------- ------ ---------- -----
+         3 C             112 S311
+                                    
+                                     
+NESTED TABLES
+------------
+
+SQL> CREATE OR REPLACE TYPE PROJECT_TYPE AS OBJECT (
+  NAME VARCHAR(6),
+  ROLE NUMBER(5)
+  );
+  /
+
+Type created.
+
+SQL> CREATE OR REPLACE TYPE PROJECT_TABLE AS TABLE OF PROJECT_TYPE;
+    /
+
+Warning: Type created with compilation errors.
+
+SQL> CREATE TYPE PROJECT_TABLE AS TABLE OF PROJECT_TYPE;
+    /
+
+Type created.                                  
+                                     
+SQL> CREATE TABLE EMP_NT(
+    EMPNO NUMBER(4),
+    ENAME VARCHAR(6),
+    PROJECTS PROJECT_TABLE
+    )
+    NESTED TABLE PROJECTS STORE AS PROJECTS_NT;
+
+Table created.
+                                     
+ SQL> INSERT INTO EMP_NT VALUES(1, 'PRAVEE', PROJECT_table(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2)));
+
+1 row created.
+
+                                                                                                  SQL> show desc
+describe DEPTH 1 LINENUM OFF INDENT ON
+SQL> set desc depth 3
+SQL> desc emp_nt;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(6)
+ PROJECTS                                           PROJECT_TABLE
+   NAME                                             VARCHAR2(6)
+   ROLE                                             NUMBER(5)
+                                     
+                                     
+                                     
