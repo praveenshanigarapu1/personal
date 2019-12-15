@@ -2268,6 +2268,7 @@ PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('
 
          1 PRAVEE
 PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('PRVN', 3))
+                                                                               
 
          1 PRAVEE
 PROJECT_TABLE(PROJECT_TYPE('NAME1', 1), PROJECT_TYPE('NAME2', 2), PROJECT_TYPE('PRVN', 3))                                                                                                
@@ -2279,8 +2280,158 @@ SQL>  UPDATE  TABLE(SELECT PROJECTS FROM EMP_NT WHERE EMPNO=1)  SET NAME = 'NAME
 
 1 row updated.                                                                         
                                                      
+TYPES OF TABLES
+---------------                                                            ----------
+SQL> CONN prvn/prvn1;
+Connected.
+SQL> CREATE TABLE T_HEAP(
+  EMPNO NUMBER(4),
+  ENAME VARCHAR(6),
+  SAL NUMBER(5)
+  ) ORGANIZATION HEAP;   
+
+Table created.
+
+SQL> desc t_heap;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(6)
+ SAL                                                NUMBER(5)                                                     
                                                      
-                                                     
-                                                     
-                                                     
-                                                     
+INSERT INTO T_HEAP VALUES(1, 'a', 100);
+INSERT INTO T_HEAP VALUES(1, 'B', 101);
+INSERT INTO T_HEAP VALUES(1, 'C', 102);
+INSERT INTO T_HEAP VALUES(1, 'D', 103);                                                     
+
+COMMIT;                                                                        
+                                                                               
+SQL> SELECT * FROM T_HEAP;
+
+     EMPNO ENAME         SAL
+---------- ------ ----------
+         1 a             100
+         1 B             101
+         1 C             102
+         1 D             103                                                                               
+                                                                               
+  SQL>
+CREATE GLOBAL TEMPORARY TABLE T_GTT_TRANSACTIONAL(
+    EMPNO NUMBER(4),
+    ENAME VARCHAR(6),
+    SAL NUMBER(5)
+    ) ON COMMIT DELETE ROWS;
+
+Table created.
+
+SQL> DESC T_GTT_TRANSACTIONAL
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(6)
+ SAL                                                NUMBER(5)
+                                                                             
+ SQL> SELECT * FROM T_GTT_TRANSACTIONAL;
+
+     EMPNO ENAME         SAL
+---------- ------ ----------
+         1 a             100
+         2 B             101
+         3 C             102
+         4 D             103
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> SELECT * FROM T_GTT_TRANSACTIONAL;
+
+no rows selected
+                                                                              
+Till commit data is available
+                                                                               
+ SQL> CONN prvn/prvn1
+Connected.
+SQL> CREATE GLOBAL TEMPORARY TABLE T_GTT_SSSION(
+  EMPNO NUMBER(4),
+  ENAME VARCHAR(6),
+  SAL NUMBER(5)
+  ) ON COMMIT PRESERVE ROWS;        --session
+
+Table created.
+
+SQL> desc TABLE T_GTT_SSSION
+Usage: DESCRIBE [schema.]object[@db_link]
+SQL> desc  T_GTT_SSSION
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(6)
+ SAL                                                NUMBER(5)
+
+SQL> INSERT INTO T_GTT_SSSION VALUES(1, 'a', 100);
+
+1 row created.
+
+SQL> INSERT INTO T_GTT_SSSION VALUES(2, 'B', 101);
+
+1 row created.
+
+SQL> INSERT INTO T_GTT_SSSION VALUES(3, 'C', 102);
+
+1 row created.
+
+SQL> INSERT INTO T_GTT_SSSION VALUES(4, 'D', 103);
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select* from  T_GTT_SSSION;
+
+     EMPNO ENAME         SAL
+---------- ------ ----------
+         1 a             100
+         2 B             101
+         3 C             102
+         4 D             103                                                                              
+ SQL> select* from  T_GTT_SSSION;
+
+     EMPNO ENAME         SAL
+---------- ------ ----------
+         1 a             100
+         2 B             101
+         3 C             102
+         4 D             103
+
+SQL> conn u1/u1;
+Connected.
+SQL> select* from  T_GTT_SSSION;
+select* from  T_GTT_SSSION
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> conn prvn/prvn1;
+Connected.
+SQL> select* from  T_GTT_SSSION;
+
+no rows selected                                                                              
+
+                                                                               
+  Eternal table
+-----------------
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
