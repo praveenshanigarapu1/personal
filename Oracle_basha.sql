@@ -2425,13 +2425,56 @@ no rows selected
   Eternal table
 -----------------
                                                                                
+SQL> CREATE DIRECTORY DIR AS 'F:\Oracle_external';
+
+Directory created.                                                                               
+
+                                                                               
+SQL> CREATE  TABLE emp_ext(
+  EMPNO NUMBER(4),
+  ENAME VARCHAR(6),
+  SAL NUMBER(5)
+  ) ORGANIZATION  EXTERNAL
+  (
+  DEFAULT DIRECTORY DIR
+  ACCESS PARAMETERS
+  ( RECORD DELIMITED BY ';'
+    FIELDS TERMINALTED BY ','
+   )
+  LOCATION ('ABC.TXT')
+  );
+
+Table created.                                                                               
+                                                                               
+ SQL> DESC EMP_EXT
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(6)
+ SAL                                                NUMBER(5)
+
+INDEX ORGANIZED TABLES
+-------------------------------                                                                               
+ SQL> CREATE TABLE emp_iot(
+   EMPNO       NUMBER(4) Primary key,
+   ENAME       VARCHAR2(10),
+   JOB         VARCHAR2(9),
+   SAL         NUMBER(7,2),
+   COMM        NUMBER(7,2)
+   ) ORGANIZATION INDEX;
+
+Table created.
                                                                                
                                                                                
+ PARTITIONED TABLE                                                                              
+-------------------                                                             
                                                                                
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
-                                                                               
+ SQL> select * from v$option where parameter = 'Partitioning';
+
+PARAMETER
+----------------------------------------------------------------
+VALUE
+----------------------------------------------------------------
+Partitioning
+FALSE                                                                              
                                                                                
