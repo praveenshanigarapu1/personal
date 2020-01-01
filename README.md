@@ -149,4 +149,7 @@ git clone
 
 https://github.com/praveenshanigarapu1/projects
 
+Angular Link
+------------
+https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA/playlists
 
