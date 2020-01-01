@@ -153,3 +153,7 @@ Angular Link
 ------------
 https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA/playlists
 
+Visual code
+------------
+https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer
+
